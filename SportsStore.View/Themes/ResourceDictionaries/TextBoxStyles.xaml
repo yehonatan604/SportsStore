@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="TextBox" x:Key="TboxComponenta1">
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Margin" Value="5,10,0,0" />
+    </Style>
+
+    <Style TargetType="TextBox" x:Key="TboxComponenta2">
+        <Setter Property="Width" Value="50"/>
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Background" Value="#FFE9E9E9" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="1.5,1.5,0.5,0.5" />
+    </Style>
+
+</ResourceDictionary>

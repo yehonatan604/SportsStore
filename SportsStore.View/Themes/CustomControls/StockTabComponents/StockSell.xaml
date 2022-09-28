@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="SportsStore.View.Themes.CustomControls.StockSell"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SportsStore.View.Themes.CustomControls"
+             mc:Ignorable="d" 
+             Height="195" Width="395">
+    <Grid VerticalAlignment="Top" Height="195">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <WrapPanel Orientation="Vertical" Grid.ColumnSpan="2"  Grid.RowSpan="2" >
+            <Grid Margin="5,-22,0,0" Width="192">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock  Text="Id:" Style="{StaticResource TblockComponenta}" />
+                <TextBox x:Name="TboxSellID" Width="100" Margin="-25,10,0,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}"/>
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Quantity:" Style="{StaticResource TblockComponenta}"/>
+                <TextBox x:Name="TboxSellQuantity" Width="100" Margin="-25,10,0,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" LostFocus="BoxItemPrice_LostFocus" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Costumer:" Style="{StaticResource TblockComponenta}"/>
+                <ComboBox x:Name="cmboBoxSellCustomer"  Margin="-15,10,0,0" Grid.Column="1" Style="{StaticResource CmboBoxComponentaStyle}" LostFocus="BoxItemPrice_LostFocus" />
+            </Grid>
+        </WrapPanel>
+            <Button x:Name="BtnSell" Content="Sell" Grid.ColumnSpan="2"
+                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="BtnSell_Click" Grid.Row="1" Margin="0,0,0,12"/>
+    </Grid>
+</UserControl>

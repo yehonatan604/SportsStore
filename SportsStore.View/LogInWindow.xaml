@@ -1,0 +1,48 @@
+﻿<Window x:Class="SportsStore.View.LogInWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SportsStore.View"
+        mc:Ignorable="d"
+        Title="LogInWindow" Height="450" Width="800" Closing="OnExit">
+    <Grid>
+        <Grid >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.1*"/>
+                <RowDefinition Height="2.5*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Log-In to client" FontSize="50" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center"/>
+
+            <WrapPanel Name="Content" Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" Margin="0,60,0,0">
+                <StackPanel x:Name="Texts">
+                    <TextBlock Text="Email:" />
+                    <TextBlock Text="Password:" />
+                    <CheckBox x:Name="ChkBoxRemember" HorizontalAlignment="Center" Margin="5,35,20,0"/>
+                    
+                </StackPanel>
+                <StackPanel x:Name="Boxes">
+                    <TextBox x:Name="BoxEmail"/>
+                    <PasswordBox x:Name="BoxPassword"/>
+                    <TextBlock x:Name="TxtKeepLogged" Text="Keep Me Logged In" Margin="5,29,20,0" MouseEnter="OnMouseEnter" MouseLeave="OnMouseLeave" MouseDown="OnMouseDown" />
+                </StackPanel>
+            </WrapPanel>
+            <StackPanel x:Name="LoginRegBtns" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center">
+                <TextBlock x:Name="TxtRegister" Text="Register" MouseDown="OnMouseDown" MouseEnter="OnMouseEnter" MouseLeave="OnMouseLeave" HorizontalAlignment="Center" />
+                <TextBlock x:Name="TxtIForgot" Text="I forgot my password" MouseDown="OnMouseDown" MouseEnter="OnMouseEnter" MouseLeave="OnMouseLeave" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <Button x:Name="BtnLogIn" Grid.Column="1" Grid.Row="3" Click="BtnLogIn_Click">
+                <Button.Content>
+                    <TextBlock Text="Log-In" Margin="0,0,0,0"/>
+                </Button.Content>
+            </Button>
+        </Grid>
+    </Grid>
+</Window>

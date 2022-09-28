@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="TextBlock" x:Key="TabsTblockStyle">
+        <Setter Property="Foreground" Value="LemonChiffon"/>
+        <Setter Property="FontFamily" Value="Gill Sans MT"/>
+        <Setter Property="FontSize" Value="30"/>
+        <Setter Property="FontWeight" Value="Light"/>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="TblockComponenta">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="0,10,0,0" />
+    </Style>
+</ResourceDictionary>

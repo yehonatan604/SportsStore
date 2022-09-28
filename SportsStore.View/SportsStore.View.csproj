@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\editStockTab-icon.png" />
+    <None Remove="Images\LoggsTab-icon.png" />
+    <None Remove="Images\menu-icon.png" />
+    <None Remove="Images\messagesTab-icon.png" />
+    <None Remove="Images\salesTab-icon.png" />
+    <None Remove="Images\SettingsTab-icon.png" />
+    <None Remove="Images\stockTab-icon.png" />
+    <None Remove="Images\usersTab-icon.png" />
+    <None Remove="Themes\ResourceDictionaries\BorderStyles.xaml~RF7a730b.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\SettingsTab-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\usersTab-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\editStockTab-icon.png" />
+    <Resource Include="Images\LoggsTab-icon.png" />
+    <Resource Include="Images\menu-icon.png" />
+    <Resource Include="Images\messagesTab-icon.png" />
+    <Resource Include="Images\salesTab-icon.png" />
+    <Resource Include="Images\stockTab-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SportsStore\SportsStore.Controller\SportsStore.Controller.csproj" />
+    <ProjectReference Include="..\SportsStore.Model\SportsStore.Model.csproj" />
+  </ItemGroup>
+
+</Project>

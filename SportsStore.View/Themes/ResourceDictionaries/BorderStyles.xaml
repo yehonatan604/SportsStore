@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="Border" x:Key="HeadLines2">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="1,1" StartPoint="0,0">
+                    <GradientStop Color="#FF8996B1" Offset="1"/>
+                    <GradientStop Color="#FFAFB6C7" Offset="0.1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Border" x:Key="HeadLines1">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0,0">
+                    <GradientStop Color="#FFAFB6C7" Offset="1"/>
+                    <GradientStop Color="#FF8996B1" Offset="0"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style> 
+</ResourceDictionary>
