@@ -12,16 +12,20 @@ using SportsStore.Enums;
 using SportsStore.View.Utilities;
 using System.Windows.Media;
 using SportsStore.View.Themes.CustomControls;
+using SportsStore.View.Themes.CustomControls.EditStockTabComponents;
+using SportsStore.View.Themes.CustomControls.SalesTabComponents;
 
 namespace SportsStore.View
 {
+    public delegate void RefreshDgrid(DataGrid? dGrid = null);
+
     public partial class MainWindow : Window
     {
         // Fields
         private readonly Write writer;
         private readonly Read reader;
+        public RefreshDgrid RefreshDgrid { get; set; }
         public static MainWindow Instance { get; private set; }
-
         // Constructor
         public MainWindow()
         {
@@ -37,14 +41,15 @@ namespace SportsStore.View
                 loginWindow.ShowDialog();
             }
 
-            DgridController(Dgrid1);
-            RefreshDataGrid();
-
             CmboBoxFiller.Fill(new ItemTypes(), StockViews.Instance.CmbBoxViewByItemType);
-            CmboBoxFiller.Fill(new ItemTypes(), BoxItemType);
-            CmboBoxFiller.Fill(new ColorTypes(), BoxColor);
+            CmboBoxFiller.Fill(new ItemTypes(), EditStockAddItem.Instance.BoxItemType);
+            CmboBoxFiller.Fill(new ItemTypes(), EditStockEditItem.Instance.BoxItemType);
+            CmboBoxFiller.Fill(new ItemTypes(), SaleViews.Instance.CmbBoxByItemType);
+            CmboBoxFiller.Fill(new ColorTypes(), EditStockAddItem.Instance.BoxColor);
+            CmboBoxFiller.Fill(new ColorTypes(), SaleViews.Instance.CmbBoxByColor);
+            CmboBoxFiller.Fill(new ColorTypes(), EditStockEditItem.Instance.BoxColor);
             CmboBoxFiller.Fill(new UserTypes(), CmboBoxChangeType);
-            FillSalesBoxes();
+            CmboBoxFiller.FillSalesBoxes();
             FillLogsBoxes();
 
             EditStock_Tab.IsEnabled = reader.CheckAuthorizationLevel() < 2;
@@ -55,7 +60,10 @@ namespace SportsStore.View
             StartClock();
 
             LblUser.Content = $"{Write.LoggedInUser.FirstName} {Write.LoggedInUser.LastName}";
-            
+
+            RefreshDgrid = new(RefreshDataGrid);
+            RefreshDgrid.Invoke();
+            DgridController(Dgrid1);
         }
 
         // Digital Clock
@@ -68,7 +76,7 @@ namespace SportsStore.View
             clock.Tick += Tick;
             clock.Start();
         }
-        private void Tick(object sender, EventArgs e)
+        private void Tick(object? sender, EventArgs e)
         {
             LblTime.Content = DateTime.UtcNow.ToString("dddd, dd MMMM yyyy HH:mm:ss");
         }
@@ -76,83 +84,19 @@ namespace SportsStore.View
         // Stock_Tab Event Handlers
         private void Stocks_Tabs_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            RefreshDataGrid();
+            RefreshDgrid.Invoke();
             DgridController(Dgrid1);
-        }
-        private void Dgrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            StockInfo.Instance.TboxInfo.Text = $"{GetDgridContent(Dgrid1, 1)}\n" +
-                            $"Id: {GetDgridContent(Dgrid1)}\n" +
-                            $"Price: {GetDgridContent(Dgrid1, 4)}\n" +
-                            $"Color: {GetDgridContent(Dgrid1, 5)}\n" +
-                            $"Size: {GetDgridContent(Dgrid1, 6)}\n" +
-                            $"In Stock: {GetDgridContent(Dgrid1, 7)}\n";
-
-            StockInfo.Instance.TboxInfo.Text += $"\n\n{GetDgridContent(Dgrid1, 1)}\n" +
-                                   $"is a {GetDgridContent(Dgrid1, 3)} {GetDgridContent(Dgrid1, 2)} " +
-                                   $"and it costs {GetDgridContent(Dgrid1, 4)} Shekels.\n" +
-                                   $"we are working with this product\nsince: {GetDgridContent(Dgrid1, 8)}";
-
-            StockSell.Instance.TboxSellID.Text = GetDgridContent(Dgrid1);
         }
 
         // EditStock_Tab Event Handlers
-        private void BtnAddItem_Click(object sender, RoutedEventArgs e)
-        {
-            _ = BoxItemType.Text == ItemTypes.Clothe.ToString() ?
-                MessageBox.Show(writer.AddItem(BoxItemType.Text, BoxItemName.Text, Convert.ToDouble(BoxItemPrice.Text),
-                                               BoxColor.Text, BoxItemInnerType.Text, BoxSizeTypes.Text)
-                                               ? "Item Added Succesfuly" : "Operation Failed") :
-                MessageBox.Show(writer.AddItem(BoxItemType.Text, BoxItemName.Text, Convert.ToDouble(BoxItemPrice.Text),
-                                               BoxColor.Text, BoxItemInnerType.Text)
-                                               ? "Item Added Succesfuly" : "Operation Failed");
-            RefreshDataGrid();
-        }
-        private void BtnAddStock_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show(writer.AddStock(Convert.ToInt16(TboxItemId.Text), Convert.ToInt16(TboxQuantity.Text))
-                                            ? "Stock Added Succesfuly" : "Operation Failed");
-            RefreshDataGrid();
-        }
         private void BoxItemPrice_LostFocus(object sender, RoutedEventArgs e)
         {
             Validate.IsStringNaN((TextBox)sender, e);
         }
-        private void BoxItemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EditStock_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            BoxItemInnerType.Items.Clear();
-            switch (BoxItemType.SelectedItem)
-            {
-                case ItemTypes.Clothe:
-                    {
-                        BoxColor.IsEnabled = true;
-                        BoxSizeTypes.IsEnabled = true;
-                        CmboBoxFiller.Fill(new ColorTypes(), BoxColor);
-                        CmboBoxFiller.Fill(new ClotheTypes(), BoxItemInnerType);
-
-                        break;
-                    }
-                case ItemTypes.Ball:
-                    {
-                        BoxColor.IsEnabled = true;
-                        CmboBoxFiller.Fill(new BallTypes(), BoxItemInnerType);
-                        break;
-                    }
-                case ItemTypes.Bat: { CmboBoxFiller.Fill(new BatTypes(), BoxItemInnerType); break; }
-                case ItemTypes.Net: { CmboBoxFiller.Fill(new NetTypes(), BoxItemInnerType); break; }
-
-            }
-            BoxItemInnerType.IsEnabled = true;
-        }
-        private void BoxItemInnerType_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            switch (BoxItemInnerType.SelectedItem)
-            {
-                case ClotheTypes.Shirt: { FillSizeTypes(ClotheTypes.Shirt); break; }
-                case ClotheTypes.Pants: { FillSizeTypes(ClotheTypes.Pants); break; }
-                case ClotheTypes.Shorts: { FillSizeTypes(ClotheTypes.Shorts); break; }
-                case ClotheTypes.Shoes: { FillSizeTypes(ClotheTypes.Shoes); break; }
-            }
+            RefreshDgrid.Invoke();
+            DgridController(Dgrid1_1);
         }
 
         // Sales_Tab Event Handlers
@@ -168,40 +112,13 @@ namespace SportsStore.View
         }
         private void Dgrid2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TboxSaleInfo.Text = $"Item: {GetDgridContent(Dgrid2, 1)}\n" +
-                                $"Type: {GetDgridContent(Dgrid2, 3)} {GetDgridContent(Dgrid2, 2)}\n\n" +
-                                $"{GetDgridContent(Dgrid2, 5)} units were soled for total of {GetDgridContent(Dgrid2, 6)}\n" +
-                                $"at {GetDgridContent(Dgrid2, 10)}\n" +
-                                $"by: {GetDgridContent(Dgrid2, 8)} {GetDgridContent(Dgrid2, 9)}, id: {GetDgridContent(Dgrid2, 7)}";
+            //TboxSaleInfo.Text = $"Item: {GetDgridContent(Dgrid2, 1)}\n" +
+              //                  $"Type: {GetDgridContent(Dgrid2, 3)} {GetDgridContent(Dgrid2, 2)}\n\n" +
+                //                $"{GetDgridContent(Dgrid2, 5)} units were soled for total of {GetDgridContent(Dgrid2, 6)}\n" +
+                  //              $"at {GetDgridContent(Dgrid2, 10)}\n" +
+                    //            $"by: {GetDgridContent(Dgrid2, 8)} {GetDgridContent(Dgrid2, 9)}, id: {GetDgridContent(Dgrid2, 7)}";
         }
-        private void TboxByItem_KeyUp(object sender, KeyEventArgs e)
-        {
-            Dgrid2.ItemsSource = reader.GetTable("ByItemId", TboxByItem.Text).ToList();
-        }
-        private void TboxByItemType_DropDownClosed(object sender, EventArgs e)
-        {
-            Dgrid2.ItemsSource = reader.GetTable("ByType", CmbBoxByItemType.Text).ToList();
-        }
-        private void TboxBySalesman_DropDownClosed(object sender, EventArgs e)
-        {
-            Dgrid2.ItemsSource = reader.GetTable("BySalseMan", CmbBoxBySalesman.Text).ToList();
-        }
-        private void TboxByDate_DropDownClosed(object sender, EventArgs e)
-        {
-            Dgrid2.ItemsSource = reader.GetTable("ByDate", CmbBoxByDate.Text).ToList();
-        }
-        private void BtnMinMax_Click(object sender, RoutedEventArgs e)
-        {
-            Dgrid2.ItemsSource = reader.GetTable("ByTPrice", TboxMin.Text, TboxMax.Text).ToList();
-        }
-        private void TboxMin_GotFocus(object sender, RoutedEventArgs e)
-        {
-            TboxMin.Text = string.Empty;
-        }
-        private void TboxMax_GotFocus(object sender, RoutedEventArgs e)
-        {
-            TboxMax.Text = string.Empty;
-        }
+        
 
         // Users_Tab Event Handlers
         private void Users_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -377,44 +294,7 @@ namespace SportsStore.View
         }
 
         // ComboBox Fillers
-        private void FillSizeTypes(ClotheTypes type)
-        {
-            BoxSizeTypes.Items.Clear();
-            switch (type)
-            {
-                case ClotheTypes.Shirt:
-                    {
-                        foreach (var item in Enum.GetValues(typeof(ShirtSizeTypes)))
-                        {
-                            BoxSizeTypes.Items.Add(item);
-                        }
-                        break;
-                    }
-                default:
-                    {
-                        for (int i = 26; i <= 52; i++)
-                        {
-                            BoxSizeTypes.Items.Add(i);
-                        }
-                        break;
-                    }
-            }
-        }
-        private void FillSalesBoxes()
-        {
-            foreach (string str in reader.GetList("ByItem"))
-            {
-                CmbBoxByItemType.Items.Add(str);
-            }
-            foreach (string str in reader.GetList("BySalesMan"))
-            {
-                CmbBoxBySalesman.Items.Add(str);
-            }
-            foreach (string str in reader.GetList("ByDate"))
-            {
-                CmbBoxByDate.Items.Add(str);
-            }
-        }
+        
         private void FillLogsBoxes()
         {
             foreach (string str in reader.GetList("ByLogUserId"))
@@ -432,6 +312,34 @@ namespace SportsStore.View
         }
 
         // DataGrids Handlers
+        private void DataGridSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is DataGrid dGrid)
+            {
+                EditStockInfo.Instance.TboxInfo.Text = $"{GetDgridContent(dGrid, 1)}\n" +
+                                $"Id: {GetDgridContent(dGrid)}\n" +
+                                $"Price: {GetDgridContent(dGrid, 4)}\n" +
+                                $"Color: {GetDgridContent(dGrid, 5)}\n" +
+                                $"Size: {GetDgridContent(dGrid, 6)}\n" +
+                                $"In Stock: {GetDgridContent(dGrid, 7)}\n";
+
+                EditStockInfo.Instance.TboxInfo.Text += $"\n\n{GetDgridContent(dGrid, 1)}\n" +
+                                       $"is a {GetDgridContent(dGrid, 3)} {GetDgridContent(dGrid, 2)} " +
+                                       $"and it costs {GetDgridContent(dGrid, 4)} Shekels.\n" +
+                                       $"we are working with this product\nsince: {GetDgridContent(dGrid, 8)}";
+
+                EditStockEditItem.Instance.BoxItemId.Text = GetDgridContent(dGrid);
+
+                EditStockAddItem.Instance.BoxId.Text = GetDgridContent(dGrid);
+                EditStockEditItem.Instance.BoxItemName.Text = GetDgridContent(dGrid, 1);
+                EditStockEditItem.Instance.BoxItemPrice.Text = GetDgridContent(dGrid, 4);
+                EditStockEditItem.Instance.BoxQuantity.Text = GetDgridContent(dGrid, 7);
+                EditStockEditItem.Instance.BoxItemType.Text = GetDgridContent(dGrid, 2);
+                EditStockEditItem.Instance.BoxItemInnerType.Text = GetDgridContent(dGrid, 3);
+                EditStockEditItem.Instance.BoxSize.SelectedValue = GetDgridContent(dGrid, 5);
+                EditStockEditItem.Instance.BoxColor.SelectedValue = GetDgridContent(dGrid, 6);
+            }
+        }
         private string GetDgridContent(DataGrid dGrid, int cell = 0)
         {
             try
@@ -446,7 +354,7 @@ namespace SportsStore.View
         }
         private void DgridController(DataGrid currentGrid)
         {
-            foreach (var control in MainGrid.Children)
+            foreach (var control in StockTabGrid.Children)
             {
                 if (control is DataGrid grid)
                 {
@@ -460,7 +368,7 @@ namespace SportsStore.View
             if (dGrid == null)
             {
                 Dgrid1.ItemsSource = reader.GetTable().ToList();
-                Dgrid11.ItemsSource = reader.GetTable().ToList();
+                Dgrid1_1.ItemsSource = reader.GetTable().ToList();
             }
             if (dGrid == Dgrid2)
             {
@@ -491,6 +399,7 @@ namespace SportsStore.View
                 tb.Foreground = new SolidColorBrush(Colors.LemonChiffon);
             }
         }
+
     }
 }
 

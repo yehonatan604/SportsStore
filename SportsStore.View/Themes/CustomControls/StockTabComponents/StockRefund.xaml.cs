@@ -1,4 +1,6 @@
 ﻿using SportsStore.Controller;
+using SportsStore.Enums;
+using SportsStore.View.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +34,7 @@ namespace SportsStore.View.Themes.CustomControls
             reader = new();
 
             reader.GetList("ByCostumer").ForEach(costumer => CmbBoxCostumer.Items.Add(costumer));
+            CmboBoxFiller.Fill(new RefundTypes(), CmbBoxReason);
         }
 
         private void CmbBoxCostumer_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -54,7 +57,19 @@ namespace SportsStore.View.Themes.CustomControls
 
         private void CmbBoxSale_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            StockInfo stockInfo = StockInfo.Instance;
+            List<string> list;
 
+            if (CmbBoxCostumer.SelectedItem is string costumerId && CmbBoxSale.SelectedItem is string sale)
+            {
+                list = reader.GetSaleInfo(costumerId, sale);
+
+                stockInfo.TboxInfo.Text = $"{list[0]} {list[1]}\n" +
+                                          $"Id: {costumerId}\n" +
+                                          $"Item: {list[2]}\n" +
+                                          $"Quantity: {list[3]}\n" +
+                                          $"Total Price: {list[4]}$";
+            }
         }
     }
 }

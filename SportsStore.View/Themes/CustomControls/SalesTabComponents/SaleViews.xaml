@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="SportsStore.View.Themes.CustomControls.SalesTabComponents.SaleViews"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SportsStore.View.Themes.CustomControls.SalesTabComponents"
+             mc:Ignorable="d" 
+             Height="340" Width="395">
+    <Grid>
+        <WrapPanel Orientation="Vertical">
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="By Id:" />
+                <TextBox x:Name="BoxById" Width="100" Margin="-25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="By Item Type:" />
+                <ComboBox x:Name="CmbBoxByItemType" Margin="-25,6,20,0" Grid.Column="1" Style="{StaticResource CmboBoxComponentaStyle}" />
+            </Grid>
+
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="By Color:" />
+                <ComboBox x:Name="CmbBoxByColor" Style="{StaticResource CmboBoxComponentaStyle}" Margin="-25,6,20,0" Grid.Column="1" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="By Size:" />
+                <ComboBox x:Name="CmbBoxBySize" Style="{StaticResource CmboBoxComponentaStyle}" Margin="-25,6,20,0" Grid.Column="1" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="By Salesman:" />
+                <ComboBox x:Name="CmbBoxBySalesman" Style="{StaticResource CmboBoxComponentaStyle}" Margin="-25,6,20,0" Grid.Column="1" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="By Date:" />
+                <ComboBox x:Name="CmbBoxByDate" Style="{StaticResource CmboBoxComponentaStyle}" Margin="-25,6,20,0" Grid.Column="1" />
+            </Grid>
+            <Grid Margin="5,10,0,0" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="By Price:" />
+                <WrapPanel HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="70,0,0,0" Width="199">
+                    <TextBox x:Name="TboxMin" Text="Min" Style="{StaticResource TboxComponenta2}" GotFocus="TboxMin_GotFocus" Margin="0,10,0,0"/>
+                    <TextBox x:Name="TboxMax" Text="Max" Style="{StaticResource TboxComponenta2}" GotFocus="TboxMax_GotFocus" Margin="13,10,0,0"/>
+                </WrapPanel>
+            </Grid>
+            <Grid Margin="5,10,0,0" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                    <Button x:Name="BtnSearch" Content="Go" Width="65"  Grid.Column="0" Margin="0,10,0,0" HorizontalAlignment="Center" />
+                    <Button x:Name="BtnRefresh" Content="Refresh" Width="65"  Grid.Column="1" Margin="0,10,0,0" HorizontalAlignment="Left"/>
+            </Grid>
+
+        </WrapPanel>
+    </Grid>
+
+</UserControl>

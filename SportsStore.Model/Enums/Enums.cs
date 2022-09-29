@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace SportsStore.Enums
 {
+    public enum RefundTypes
+    {
+        DamagedStock,
+        WrongStock,
+        Regret,
+        TypingError
+    }
     public enum ActionTypes
     {
         Login,

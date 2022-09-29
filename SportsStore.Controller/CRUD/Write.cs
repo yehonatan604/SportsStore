@@ -5,6 +5,7 @@ using SportsStore.Model.Costumers;
 using SportsStore.Model.Items;
 using SportsStore.Model.Users;
 using SportStore.Controller.DbConnector;
+using System.Diagnostics;
 
 namespace SportsStore.Controller
 {
@@ -155,24 +156,24 @@ namespace SportsStore.Controller
             try
             {
 
-            ItemCreator creator = itemType switch
-            {
-                "Ball" => new BallCreator(name, price, color, itemInnerType, size),
-                "Bat" => new BatCreator(name, price, color, itemInnerType, size),
-                "Net" => new NetCreator(name, price, color, itemInnerType, size),
-                "Clothe" => new ClotheCreator(name, price, color, itemInnerType, size),
-                _ => throw new NotImplementedException()
-            };
-            db.Items.Add(creator.CreateItem());
-            db.SaveChanges();
+                ItemCreator creator = itemType switch
+                {
+                    "Ball" => new BallCreator(name, price, color, itemInnerType, size),
+                    "Bat" => new BatCreator(name, price, color, itemInnerType, size),
+                    "Net" => new NetCreator(name, price, color, itemInnerType, size),
+                    "Clothe" => new ClotheCreator(name, price, color, itemInnerType, size),
+                    _ => throw new NotImplementedException()
+                };
+                db.Items.Add(creator.CreateItem());
+                db.SaveChanges();
 
-            string description = $"{LoggedInUser.FirstName} Added New Item";
-            AddLog(LoggedInUser.Id, description, ActionTypes.AddItem);
-            int id = (from i in db.Items
-                      orderby i.Id descending
-                      select i.Id).First();
-            AddStock(id, 0);
-            return true;
+                string description = $"{LoggedInUser.FirstName} Added New Item";
+                AddLog(LoggedInUser.Id, description, ActionTypes.AddItem);
+                int id = (from i in db.Items
+                          orderby i.Id descending
+                          select i.Id).First();
+                AddStock(id, 0);
+                return true;
             }
             catch
             {
@@ -218,6 +219,48 @@ namespace SportsStore.Controller
             return true;
         }
 
+        public bool EditStock(int itemId,string name = "", string price = "", string quantity = "",
+                              string itemType = "", string innerItemType = "", string color = "", string size = "")
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(name))
+                {
+                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].Name = name;
+                }
+                if (!string.IsNullOrEmpty(price))
+                {
+                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].Price = Convert.ToInt16(price);
+                }
+                if (!string.IsNullOrEmpty(quantity))
+                {
+                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x).ToList()[0].Quantity = Convert.ToInt16(quantity);
+                }
+                if (!string.IsNullOrEmpty(itemType))
+                {
+                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].ItemType = itemType;
+                }
+                if (!string.IsNullOrEmpty(innerItemType))
+                {
+                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].ItemInnerType = innerItemType;
+                }
+                if (!string.IsNullOrEmpty(color))
+                {
+                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].Color = color;
+                }
+                if (!string.IsNullOrEmpty(size))
+                {
+                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].Size = size;
+                }
+                db.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         // Strart/End Handlers
         public void ExitProgram() // Called when Window Closes
         {
@@ -257,7 +300,7 @@ namespace SportsStore.Controller
                           where user.Email == LoggedUserEmail
                           orderby user.Id
                           select user.Id).Last();
-                
+
             }
 
             // if LoggedIns entity is not empty,

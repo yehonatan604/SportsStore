@@ -1,6 +1,7 @@
 ﻿using SportsStore.Controller;
 using SportsStore.Enums;
 using SportsStore.View.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -90,11 +91,11 @@ namespace SportsStore.View.Themes.CustomControls
         }
         private void TboxMin_GotFocus(object sender, RoutedEventArgs e)
         {
-            MainWindow.Instance.TboxMin.Text = string.Empty;
+            TboxStockMin.Text = string.Empty;
         }
         private void TboxMax_GotFocus(object sender, RoutedEventArgs e)
         {
-            MainWindow.Instance.TboxMax.Text = string.Empty;
+            TboxStockMax.Text = string.Empty;
         }
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
@@ -102,41 +103,28 @@ namespace SportsStore.View.Themes.CustomControls
             bool byInnerType = CmbBoxViewByInnerType.Text != string.Empty;
             bool byColor = CmbBoxViewByColor.Text != string.Empty;
             bool bySize = CmbBoxViewBySize.Text != string.Empty;
-            bool byPriceMin = TboxStockMin.Text != string.Empty && TboxStockMin.Text != "Min";
-            bool byPriceMax = TboxStockMin.Text != string.Empty && TboxStockMin.Text != "Max";
+            
+            string minPrice = TboxStockMin.Text == "Min" || TboxStockMin.Text == string.Empty ? "0" : TboxStockMin.Text;
+            string maxPrice = TboxStockMax.Text == "Max" || TboxStockMax.Text == string.Empty ? 999999.ToString() : TboxStockMax.Text;
 
+            
+            
             if (byType)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByType",
-                                                     CmbBoxViewByItemType.Text).ToList();
-            }
-            if (byPriceMin && byPriceMax)
-            {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByPrice",
-                                                     TboxStockMin.Text,
-                                                     TboxStockMax.Text).ToList();
-            }
-            if (byType && byPriceMin && byPriceMax)
-            {
                 MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByItemPrice",
                                                      CmbBoxViewByItemType.Text,
-                                                     TboxStockMin.Text,
-                                                     TboxStockMax.Text).ToList();
-            }
-            if (byType && byInnerType && byPriceMin && byPriceMax)
-            {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByItemPrice",
-                                                     CmbBoxViewByItemType.Text,
-                                                     CmbBoxViewByInnerType.Text,
-                                                     TboxStockMin.Text,
-                                                     TboxStockMax.Text).ToList();
+                                                     minPrice,
+                                                     maxPrice).ToList();
             }
             if (byType && byInnerType)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByInnerType",
+                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByInnerItemPrice",
                                                      CmbBoxViewByItemType.Text,
-                                                     CmbBoxViewByInnerType.Text).ToList();
+                                                     CmbBoxViewByInnerType.Text,
+                                                     minPrice,
+                                                     maxPrice).ToList();
             }
+            
             if (byType && byInnerType && byColor)
             {
                 MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByColor",
@@ -153,21 +141,13 @@ namespace SportsStore.View.Themes.CustomControls
             }
             if (byType && byInnerType && byColor && bySize)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByAllNoPrice",
-                                                     CmbBoxViewByItemType.Text,
-                                                     CmbBoxViewByInnerType.Text,
-                                                     CmbBoxViewByColor.Text,
-                                                     CmbBoxViewBySize.Text).ToList();
-            }
-            if (byType && byInnerType && byColor && bySize && byPriceMin && byPriceMax)
-            {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByAllNoPrice",
+                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByAll",
                                                      CmbBoxViewByItemType.Text,
                                                      CmbBoxViewByInnerType.Text,
                                                      CmbBoxViewByColor.Text,
                                                      CmbBoxViewBySize.Text,
-                                                     TboxStockMin.Text,
-                                                     TboxStockMax.Text).ToList();
+                                                     minPrice,
+                                                     maxPrice).ToList();
             }
             return;
         }

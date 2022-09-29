@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SportsStore.Enums;
 using SportsStore.Model;
+using SportsStore.Model.Costumers;
 using SportsStore.Model.Items;
 using SportStore.Controller.DbConnector;
+using System.Reflection.Metadata.Ecma335;
 
 namespace SportsStore.Controller
 {
@@ -322,7 +324,7 @@ namespace SportsStore.Controller
                         return from stock in db.Stocks
                                join item in db.Items
                                on stock.Item.Id equals item.Id
-                               where item.Price > Convert.ToInt16(arg1) && item.Price < Convert.ToInt16(arg2)
+                               where item.Price > Convert.ToInt16(arg1) && item.Price < Convert.ToInt32(arg2)
                                select new
                                {
                                    item.Id,
@@ -472,7 +474,7 @@ namespace SportsStore.Controller
                                on stock.Item.Id equals item.Id
                                where item.ItemType == arg1 &&
                                      item.Price > Convert.ToInt16(arg2) &&
-                                     item.Price < Convert.ToInt16(arg3)
+                                     item.Price < Convert.ToInt32(arg3)
                                select new
                                {
                                    item.Id,
@@ -557,7 +559,7 @@ namespace SportsStore.Controller
                                where item.ItemType == arg1 &&
                                      item.ItemInnerType == arg2 &&
                                      item.Price > Convert.ToInt16(arg3) &&
-                                     item.Price < Convert.ToInt16(arg4)
+                                     item.Price < Convert.ToInt32(arg4)
                                select new
                                {
                                    item.Id,
@@ -610,7 +612,7 @@ namespace SportsStore.Controller
                                      item.Color == arg3 && 
                                      item.Size == arg4 && 
                                      item.Price > Convert.ToInt16(arg5) && 
-                                     item.Price < Convert.ToInt16(arg6)
+                                     item.Price < Convert.ToInt32(arg6)
                                select new
                                {
                                    item.Id,
@@ -706,13 +708,25 @@ namespace SportsStore.Controller
                     {
                         return (from sale in db.Sales
                                 where sale.Customer.Id == Convert.ToInt16(arg1) && sale.SaleDate.Date.ToString() == arg2
-                                select $"ID:{sale.Id} - {sale.TotalPrice}$").Distinct().ToList();
+                                select $"{sale.Id}").Distinct().ToList();
                     }
                 default:
                     {
                         return new List<string>();
                     }
             }
+        }
+        public List<string> GetSaleInfo(string customerId, string saleId)
+        {
+            return new List<string>()
+            {
+                db.customers.Single(x => x.Id == Convert.ToInt16(customerId)).FirstName,
+                db.customers.Single(x => x.Id == Convert.ToInt16(customerId)).LastName,
+                db.Sales.Where(x => x.Id == Convert.ToInt16(saleId)).Select(x => x.Item.Name).ToList()[0],
+                db.Sales.Single(x => x.Id == Convert.ToInt16(saleId)).Quantity.ToString(),
+                db.Sales.Single(x => x.Id == Convert.ToInt16(saleId)).TotalPrice.ToString(),
+                db.Sales.Single(x => x.Id == Convert.ToInt16(saleId)).SaleDate.ToString(),
+            };
         }
     }
 }
