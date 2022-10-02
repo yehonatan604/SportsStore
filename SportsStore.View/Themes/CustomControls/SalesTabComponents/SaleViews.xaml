@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SportsStore.View.Themes.CustomControls.SalesTabComponents"
              mc:Ignorable="d" 
-             Height="340" Width="395">
+             Height="364" Width="395">
     <Grid>
-        <WrapPanel Orientation="Vertical">
+        <WrapPanel Orientation="Vertical" Margin="0,0,0,-40">
             <Grid Margin="5,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -22,7 +22,15 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource TblockComponenta}" Text="By Item Type:" />
-                <ComboBox x:Name="CmbBoxByItemType" Margin="-25,6,20,0" Grid.Column="1" Style="{StaticResource CmboBoxComponentaStyle}" />
+                <ComboBox x:Name="CmbBoxByItemType" Margin="-25,6,20,0" Grid.Column="1" Style="{StaticResource CmboBoxComponentaStyle}" SelectionChanged="CmbBoxByItemType_SelectionChanged"/>
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="By Inner Type:" />
+                <ComboBox x:Name="CmbBoxByInnerType" Margin="-25,6,20,0" Grid.Column="1" Style="{StaticResource CmboBoxComponentaStyle}" SelectionChanged="CmbBoxByInnerType_SelectionChanged"/>
             </Grid>
 
             <Grid Margin="5,10,0,0">
@@ -73,7 +81,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                    <Button x:Name="BtnSearch" Content="Go" Width="65"  Grid.Column="0" Margin="0,10,0,0" HorizontalAlignment="Center" />
+                    <Button x:Name="BtnSearch" Content="Go" Width="65"  Grid.Column="0" Margin="0,10,0,0" HorizontalAlignment="Center" Click="BtnSearch_Click" />
                     <Button x:Name="BtnRefresh" Content="Refresh" Width="65"  Grid.Column="1" Margin="0,10,0,0" HorizontalAlignment="Left"/>
             </Grid>
 

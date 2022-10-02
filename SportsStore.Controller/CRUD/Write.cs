@@ -27,6 +27,7 @@ namespace SportsStore.Controller
             if (!(db.Users).Any())
             {
                 db.Users.Add(new User("NO_USER", "NO_USER", (UserTypes)500, "NO_USER", "1"));
+                db.Users.Add(new User("Admin", "Admin", (UserTypes)0, "Admin", "Admin1234"));
                 db.SaveChanges();
             }
             NoUserId = db.Users.Single(x => x.UserType == UserTypes.No_User).Id;
@@ -182,8 +183,7 @@ namespace SportsStore.Controller
                 return false;
             }
         }
-        public bool AddNewUser(string firstName, string lastName, UserTypes userType,
-                               string email, string password)
+        public bool AddNewUser(string firstName, string lastName, UserTypes userType, string email, string password)
         {
             try
             {
@@ -218,7 +218,6 @@ namespace SportsStore.Controller
             db.SaveChanges();
             return true;
         }
-
         public bool EditStock(int itemId,string name = "", string price = "", string quantity = "",
                               string itemType = "", string innerItemType = "", string color = "", string size = "")
         {

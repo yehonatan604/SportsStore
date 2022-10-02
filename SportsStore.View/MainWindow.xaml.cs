@@ -46,7 +46,6 @@ namespace SportsStore.View
             CmboBoxFiller.Fill(new ItemTypes(), EditStockEditItem.Instance.BoxItemType);
             CmboBoxFiller.Fill(new ItemTypes(), SaleViews.Instance.CmbBoxByItemType);
             CmboBoxFiller.Fill(new ColorTypes(), EditStockAddItem.Instance.BoxColor);
-            CmboBoxFiller.Fill(new ColorTypes(), SaleViews.Instance.CmbBoxByColor);
             CmboBoxFiller.Fill(new ColorTypes(), EditStockEditItem.Instance.BoxColor);
             CmboBoxFiller.Fill(new UserTypes(), CmboBoxChangeType);
             CmboBoxFiller.FillSalesBoxes();
@@ -113,12 +112,12 @@ namespace SportsStore.View
         private void Dgrid2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //TboxSaleInfo.Text = $"Item: {GetDgridContent(Dgrid2, 1)}\n" +
-              //                  $"Type: {GetDgridContent(Dgrid2, 3)} {GetDgridContent(Dgrid2, 2)}\n\n" +
-                //                $"{GetDgridContent(Dgrid2, 5)} units were soled for total of {GetDgridContent(Dgrid2, 6)}\n" +
-                  //              $"at {GetDgridContent(Dgrid2, 10)}\n" +
-                    //            $"by: {GetDgridContent(Dgrid2, 8)} {GetDgridContent(Dgrid2, 9)}, id: {GetDgridContent(Dgrid2, 7)}";
+            //                  $"Type: {GetDgridContent(Dgrid2, 3)} {GetDgridContent(Dgrid2, 2)}\n\n" +
+            //                $"{GetDgridContent(Dgrid2, 5)} units were soled for total of {GetDgridContent(Dgrid2, 6)}\n" +
+            //              $"at {GetDgridContent(Dgrid2, 10)}\n" +
+            //            $"by: {GetDgridContent(Dgrid2, 8)} {GetDgridContent(Dgrid2, 9)}, id: {GetDgridContent(Dgrid2, 7)}";
         }
-        
+
 
         // Users_Tab Event Handlers
         private void Users_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -139,7 +138,7 @@ namespace SportsStore.View
                 string salesTotal = GetDgridContent(Dgrid3, 5) == string.Empty ? "0" : GetDgridContent(Dgrid3, 5);
 
                 TboxUserInfo.Text = $"User: {GetDgridContent(Dgrid3, 1)} {GetDgridContent(Dgrid3, 2)}, " +
-                                    $"{reader.ReturnUserType(Convert.ToInt16(GetDgridContent(Dgrid3)))}\n" +
+                                    $"{reader.GetUserType(Convert.ToInt16(GetDgridContent(Dgrid3)))}\n" +
                                     $"id: {GetDgridContent(Dgrid3)}\n" +
                                     $"Email: {GetDgridContent(Dgrid3, 3)}\n\n" +
                                     $"Sales: {salesCount}\n" +
@@ -228,7 +227,7 @@ namespace SportsStore.View
             try
             {
                 TboxLogInfo.Text = $"User: {GetDgridContent(Dgrid4, 2)} {GetDgridContent(Dgrid4, 3)}, " +
-                                    $"{reader.ReturnUserType(Convert.ToInt16(GetDgridContent(Dgrid4, 1)))}\n" +
+                                    $"{reader.GetUserType(Convert.ToInt16(GetDgridContent(Dgrid4, 1)))}\n" +
                                     $"id: {GetDgridContent(Dgrid4, 1)}\n\n" +
                                     $"Action Type: {GetDgridContent(Dgrid4, 4)}\n" +
                                     $"Date: {GetDgridContent(Dgrid4, 5)}\n";
@@ -294,7 +293,7 @@ namespace SportsStore.View
         }
 
         // ComboBox Fillers
-        
+
         private void FillLogsBoxes()
         {
             foreach (string str in reader.GetList("ByLogUserId"))
@@ -330,6 +329,21 @@ namespace SportsStore.View
 
                 EditStockEditItem.Instance.BoxItemId.Text = GetDgridContent(dGrid);
 
+
+                StockInfo.Instance.TboxInfo.Text = $"{GetDgridContent(dGrid, 1)}\n" +
+                                $"Id: {GetDgridContent(dGrid)}\n" +
+                                $"Price: {GetDgridContent(dGrid, 4)}\n" +
+                                $"Color: {GetDgridContent(dGrid, 5)}\n" +
+                                $"Size: {GetDgridContent(dGrid, 6)}\n" +
+                                $"In Stock: {GetDgridContent(dGrid, 7)}\n";
+
+                StockInfo.Instance.TboxInfo.Text += $"\n\n{GetDgridContent(dGrid, 1)}\n" +
+                                       $"is a {GetDgridContent(dGrid, 3)} {GetDgridContent(dGrid, 2)} " +
+                                       $"and it costs {GetDgridContent(dGrid, 4)} Shekels.\n" +
+                                       $"we are working with this product\nsince: {GetDgridContent(dGrid, 8)}";
+
+                StockSell.Instance.TboxSellID.Text = GetDgridContent(dGrid);
+
                 EditStockAddItem.Instance.BoxId.Text = GetDgridContent(dGrid);
                 EditStockEditItem.Instance.BoxItemName.Text = GetDgridContent(dGrid, 1);
                 EditStockEditItem.Instance.BoxItemPrice.Text = GetDgridContent(dGrid, 4);
@@ -338,18 +352,6 @@ namespace SportsStore.View
                 EditStockEditItem.Instance.BoxItemInnerType.Text = GetDgridContent(dGrid, 3);
                 EditStockEditItem.Instance.BoxSize.SelectedValue = GetDgridContent(dGrid, 5);
                 EditStockEditItem.Instance.BoxColor.SelectedValue = GetDgridContent(dGrid, 6);
-            }
-        }
-        private string GetDgridContent(DataGrid dGrid, int cell = 0)
-        {
-            try
-            {
-                return ((TextBlock)dGrid.SelectedCells[cell].Column.GetCellContent(dGrid.SelectedCells[cell].Item)).Text;
-
-            }
-            catch
-            {
-                return String.Empty;
             }
         }
         private void DgridController(DataGrid currentGrid)
@@ -383,6 +385,18 @@ namespace SportsStore.View
                 Dgrid4.ItemsSource = reader.GetTable("Logs").ToList();
             }
         }
+        private string GetDgridContent(DataGrid dGrid, int cell = 0)
+        {
+            try
+            {
+                return ((TextBlock)dGrid.SelectedCells[cell].Column.GetCellContent(dGrid.SelectedCells[cell].Item)).Text;
+
+            }
+            catch
+            {
+                return String.Empty;
+            }
+        }
 
         // Global Handlers for tab headers
         private void TabHdrStock_MouseEnter(object sender, MouseEventArgs e)
@@ -399,7 +413,6 @@ namespace SportsStore.View
                 tb.Foreground = new SolidColorBrush(Colors.LemonChiffon);
             }
         }
-
     }
 }
 
