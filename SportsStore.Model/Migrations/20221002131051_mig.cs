@@ -5,29 +5,49 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SportsStore.Model.Migrations
 {
-    public partial class mig4 : Migration
+    public partial class mig : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Stocks",
+                name: "customers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    LastAdded = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AddedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalPurchases = table.Column<double>(type: "float", nullable: true),
+                    PurchasesCount = table.Column<int>(type: "int", nullable: true),
+                    Discount = table.Column<double>(type: "float", nullable: true),
+                    LastPurchase = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Stocks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Stocks_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalTable: "Items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_customers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Items",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemInnerType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Size = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Items", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,6 +70,34 @@ namespace SportsStore.Model.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Stocks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    LastAdded = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Itemname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemInnerType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemPrice = table.Column<double>(type: "float", nullable: false),
+                    ItemColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemSize = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stocks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Stocks_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,6 +170,7 @@ namespace SportsStore.Model.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ItemId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
                     SaleDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     TotalPrice = table.Column<double>(type: "float", nullable: false)
@@ -129,6 +178,12 @@ namespace SportsStore.Model.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sales", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sales_customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Sales_Items_ItemId",
                         column: x => x.ItemId,
@@ -144,7 +199,7 @@ namespace SportsStore.Model.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Message",
+                name: "Messages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -159,9 +214,9 @@ namespace SportsStore.Model.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Message", x => x.Id);
+                    table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Message_MessageBoxes_MessageBoxId",
+                        name: "FK_Messages_MessageBoxes_MessageBoxId",
                         column: x => x.MessageBoxId,
                         principalTable: "MessageBoxes",
                         principalColumn: "Id");
@@ -178,14 +233,19 @@ namespace SportsStore.Model.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_MessageBoxId",
-                table: "Message",
-                column: "MessageBoxId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MessageBoxes_UserId",
                 table: "MessageBoxes",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_MessageBoxId",
+                table: "Messages",
+                column: "MessageBoxId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sales_CustomerId",
+                table: "Sales",
+                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sales_ItemId",
@@ -212,7 +272,7 @@ namespace SportsStore.Model.Migrations
                 name: "Logs");
 
             migrationBuilder.DropTable(
-                name: "Message");
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Sales");
@@ -222,6 +282,12 @@ namespace SportsStore.Model.Migrations
 
             migrationBuilder.DropTable(
                 name: "MessageBoxes");
+
+            migrationBuilder.DropTable(
+                name: "customers");
+
+            migrationBuilder.DropTable(
+                name: "Items");
 
             migrationBuilder.DropTable(
                 name: "Users");

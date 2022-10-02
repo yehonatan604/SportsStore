@@ -20,9 +20,11 @@ namespace SportsStore.View.Themes.CustomControls.SalesTabComponents
     /// </summary>
     public partial class SaleInfo : UserControl
     {
+        public static SaleInfo Instance;
         public SaleInfo()
         {
             InitializeComponent();
+            Instance = this;
         }
     }
 }

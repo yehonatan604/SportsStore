@@ -10,7 +10,7 @@ namespace SportsStore.Model.Users
     {
         public int Id { get; set; }
         public User User { get; set; }
-        public List<Message> Messages { get; set; }
+        public int MessageCount { get; set; }
         public byte Status { get; set; }
     }
 }

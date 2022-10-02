@@ -50,7 +50,7 @@ namespace SportsStore.View
         //Specific event handlers
         private void BtnLogIn_Click(object sender, RoutedEventArgs e)
         {
-            if (reader.CheckLogin(BoxEmail.Text, Md5Hash.Create(BoxPassword.Password)))
+            if (reader.CheckLogin(BoxEmail.Text, BoxPassword.Password))
             {
                 Write.ChangeLoggedUserEmail(BoxEmail.Text);
                 MessageBox.Show($"{BoxEmail.Text} Logged in Succesfully");

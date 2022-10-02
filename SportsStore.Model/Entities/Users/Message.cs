@@ -10,20 +10,14 @@ namespace SportsStore.Model.Users
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Recipent { get; set; }
-        public string Sender { get; set; }
+        public string RecipentId { get; set; }
+        public string RecipentFName { get; set; }
+        public string RecipentLName { get; set; }
+        public string SenderId { get; set; }
+        public string SenderFname { get; set; }
+        public string SenderLname { get; set; }
         public string Content { get; set; }
         public DateTime Date { get; set; }
         public byte Status { get; set; }
-
-        public Message(string title, string content, string recipent, string sender)
-        {
-            Title = title;
-            Content = content;
-            Date = DateTime.Now;
-            Status = byte.MinValue;
-            Recipent = recipent;
-            Sender = sender;
-        }
     }
 }

@@ -11,10 +11,7 @@ using SportsStore.Model.Costumers;
 
 namespace SportsStore.Model
 {
-    public interface IDbConnector
-    {
-        // Mark Interface
-    }
+    
     public class StoreContext : DbContext
     {
         // User DbSets
@@ -36,14 +33,9 @@ namespace SportsStore.Model
         public DbSet<Net> Nets { get; set; }
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Sale> Sales { get; set; }
+        public DbSet<SalesView> SaleViews { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder) => 
-            optionBuilder.UseSqlServer("Server=DESKTOP-T74S10A;Database=SportsStore;Trusted_Connection = True;");
-
-        // in order to instanciate you have to be IDbConnector
-        public StoreContext(IDbConnector con)
-        {
-            _ = con ?? throw new ArgumentNullException(nameof(con));
-        }
+            optionBuilder.UseSqlServer("Server=DESKTOP-T74S10A;Database=NewSportsStore;Trusted_Connection = True;");
     }
 }

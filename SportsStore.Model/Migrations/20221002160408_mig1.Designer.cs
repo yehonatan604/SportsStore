@@ -12,8 +12,8 @@ using SportsStore.Model;
 namespace SportsStore.Model.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20220921221009_mig4")]
-    partial class mig4
+    [Migration("20221002160408_mig1")]
+    partial class mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,6 +24,49 @@ namespace SportsStore.Model.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("SportsStore.Model.Costumers.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double?>("Discount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastPurchase")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("PurchasesCount")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("TotalPurchases")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("customers");
+                });
+
             modelBuilder.Entity("SportsStore.Model.Items.Item", b =>
                 {
                     b.Property<int>("Id")
@@ -33,7 +76,6 @@ namespace SportsStore.Model.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Created")
@@ -58,6 +100,9 @@ namespace SportsStore.Model.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<string>("Size")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Items");
@@ -72,6 +117,9 @@ namespace SportsStore.Model.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
@@ -90,6 +138,8 @@ namespace SportsStore.Model.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CustomerId");
+
                     b.HasIndex("ItemId");
 
                     b.HasIndex("UserId");
@@ -105,13 +155,42 @@ namespace SportsStore.Model.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("ItemColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ItemCreated")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ItemInnerType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("ItemPrice")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ItemSize")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastAdded")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ThisItemId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -207,7 +286,7 @@ namespace SportsStore.Model.Migrations
 
                     b.HasIndex("MessageBoxId");
 
-                    b.ToTable("Message");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("SportsStore.Model.Users.MessageBox", b =>
@@ -292,6 +371,13 @@ namespace SportsStore.Model.Migrations
                     b.HasDiscriminator().HasValue("Bat");
                 });
 
+            modelBuilder.Entity("SportsStore.Model.Items.Clothe", b =>
+                {
+                    b.HasBaseType("SportsStore.Model.Items.Item");
+
+                    b.HasDiscriminator().HasValue("Clothe");
+                });
+
             modelBuilder.Entity("SportsStore.Model.Items.Net", b =>
                 {
                     b.HasBaseType("SportsStore.Model.Items.Item");
@@ -299,56 +385,14 @@ namespace SportsStore.Model.Migrations
                     b.HasDiscriminator().HasValue("Net");
                 });
 
-            modelBuilder.Entity("SportsStore.Model.Items.Pant", b =>
-                {
-                    b.HasBaseType("SportsStore.Model.Items.Item");
-
-                    b.Property<string>("Size")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("Pant");
-                });
-
-            modelBuilder.Entity("SportsStore.Model.Items.Shirt", b =>
-                {
-                    b.HasBaseType("SportsStore.Model.Items.Item");
-
-                    b.Property<string>("Size")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("Shirt");
-                });
-
-            modelBuilder.Entity("SportsStore.Model.Items.Shoe", b =>
-                {
-                    b.HasBaseType("SportsStore.Model.Items.Item");
-
-                    b.Property<string>("Size")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("Shoe");
-                });
-
-            modelBuilder.Entity("SportsStore.Model.Items.Short", b =>
-                {
-                    b.HasBaseType("SportsStore.Model.Items.Item");
-
-                    b.Property<string>("Size")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("Short");
-                });
-
             modelBuilder.Entity("SportsStore.Model.Items.Sale", b =>
                 {
+                    b.HasOne("SportsStore.Model.Costumers.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SportsStore.Model.Items.Item", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId")
@@ -360,6 +404,8 @@ namespace SportsStore.Model.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Item");
 

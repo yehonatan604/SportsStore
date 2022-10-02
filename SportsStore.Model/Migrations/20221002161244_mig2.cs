@@ -4,7 +4,7 @@
 
 namespace SportsStore.Model.Migrations
 {
-    public partial class newmig5 : Migration
+    public partial class mig2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

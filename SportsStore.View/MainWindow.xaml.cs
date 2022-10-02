@@ -33,13 +33,12 @@ namespace SportsStore.View
             Instance = this;
             writer = new();
             writer.OnStartProgram();
-            reader = new();
-
             if (!Write.IsRememberMe)
             {
                 LogInWindow loginWindow = new();
                 loginWindow.ShowDialog();
             }
+            reader = new();
 
             CmboBoxFiller.Fill(new ItemTypes(), StockViews.Instance.CmbBoxViewByItemType);
             CmboBoxFiller.Fill(new ItemTypes(), EditStockAddItem.Instance.BoxItemType);
@@ -51,18 +50,11 @@ namespace SportsStore.View
             CmboBoxFiller.FillSalesBoxes();
             FillLogsBoxes();
 
-            EditStock_Tab.IsEnabled = reader.CheckAuthorizationLevel() < 2;
-            Sales_Tab.IsEnabled = reader.CheckAuthorizationLevel() < 2;
-            Users_Tab.IsEnabled = reader.CheckAuthorizationLevel() == 0;
-            Logs_Tab.IsEnabled = reader.CheckAuthorizationLevel() == 0;
-
-            StartClock();
-
-            LblUser.Content = $"{Write.LoggedInUser.FirstName} {Write.LoggedInUser.LastName}";
-
             RefreshDgrid = new(RefreshDataGrid);
             RefreshDgrid.Invoke();
             DgridController(Dgrid1);
+
+            StartClock();
         }
 
         // Digital Clock
@@ -97,6 +89,34 @@ namespace SportsStore.View
             RefreshDgrid.Invoke();
             DgridController(Dgrid1_1);
         }
+        private void DGrid1_1SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is DataGrid dGrid)
+            {
+                EditStockInfo.Instance.TboxInfo.Text = $"{GetDgridContent(dGrid, 5)}\n" +
+                                $"Id: {GetDgridContent(dGrid, 4)}\n" +
+                                $"Price: {GetDgridContent(dGrid, 8)}\n" +
+                                $"Color: {GetDgridContent(dGrid, 9)}\n" +
+                                $"Size: {GetDgridContent(dGrid, 10)}\n" +
+                                $"In Stock: {GetDgridContent(dGrid, 2)}\n";
+
+                EditStockInfo.Instance.TboxInfo.Text += $"\n\n{GetDgridContent(dGrid, 5)}\n" +
+                                       $"is a {GetDgridContent(dGrid, 7)} {GetDgridContent(dGrid, 6)} " +
+                                       $"and it costs {GetDgridContent(dGrid, 8)} Shekels.\n" +
+                                       $"we are working with this product\nsince: {GetDgridContent(dGrid, 11)}";
+
+                EditStockAddItem.Instance.BoxId.Text = GetDgridContent(dGrid, 4);
+
+                EditStockEditItem.Instance.BoxItemId.Text = GetDgridContent(dGrid, 4);
+                EditStockEditItem.Instance.BoxItemName.Text = GetDgridContent(dGrid, 5);
+                EditStockEditItem.Instance.BoxItemPrice.Text = GetDgridContent(dGrid, 8);
+                EditStockEditItem.Instance.BoxQuantity.Text = GetDgridContent(dGrid, 2);
+                EditStockEditItem.Instance.BoxItemType.Text = GetDgridContent(dGrid, 6);
+                EditStockEditItem.Instance.BoxItemInnerType.Text = GetDgridContent(dGrid, 7);
+                EditStockEditItem.Instance.BoxSize.Text = GetDgridContent(dGrid, 10);
+                EditStockEditItem.Instance.BoxColor.Text = GetDgridContent(dGrid, 9);
+            }
+        }
 
         // Sales_Tab Event Handlers
         private void Sales_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -108,17 +128,17 @@ namespace SportsStore.View
             }
             RefreshDataGrid(Dgrid2);
             DgridController(Dgrid2);
+            SalesChart.Instance.CollectCharts();
         }
         private void Dgrid2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //TboxSaleInfo.Text = $"Item: {GetDgridContent(Dgrid2, 1)}\n" +
-            //                  $"Type: {GetDgridContent(Dgrid2, 3)} {GetDgridContent(Dgrid2, 2)}\n\n" +
-            //                $"{GetDgridContent(Dgrid2, 5)} units were soled for total of {GetDgridContent(Dgrid2, 6)}\n" +
-            //              $"at {GetDgridContent(Dgrid2, 10)}\n" +
-            //            $"by: {GetDgridContent(Dgrid2, 8)} {GetDgridContent(Dgrid2, 9)}, id: {GetDgridContent(Dgrid2, 7)}";
+            SaleInfo.Instance.TboxInfo.Text = $"Sale Id: {GetDgridContent(Dgrid2)}\n\n" +
+                                              $"Item: {GetDgridContent(Dgrid2, 5)}, Id: {GetDgridContent(Dgrid2, 4)}\n" +
+                                              $"Type: {GetDgridContent(Dgrid2, 7)} {GetDgridContent(Dgrid2, 6)}\n\n" +
+                                              $"{GetDgridContent(Dgrid2, 2)} units were soled for total of {GetDgridContent(Dgrid2, 3)}\n" +
+                                              $"at {GetDgridContent(Dgrid2, 1)}\n" +
+                                              $"by: {GetDgridContent(Dgrid2, 12)} {GetDgridContent(Dgrid2, 13)}, Id: {GetDgridContent(Dgrid2, 11)}";
         }
-
-
         // Users_Tab Event Handlers
         private void Users_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -287,10 +307,6 @@ namespace SportsStore.View
         {
             writer.ExitProgram();
         }
-        private void OnStartUp(object sender, RoutedEventArgs e)
-        {
-            writer.StartProgram();
-        }
 
         // ComboBox Fillers
 
@@ -311,47 +327,23 @@ namespace SportsStore.View
         }
 
         // DataGrids Handlers
-        private void DataGridSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void DGrid1SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is DataGrid dGrid)
             {
-                EditStockInfo.Instance.TboxInfo.Text = $"{GetDgridContent(dGrid, 1)}\n" +
-                                $"Id: {GetDgridContent(dGrid)}\n" +
-                                $"Price: {GetDgridContent(dGrid, 4)}\n" +
-                                $"Color: {GetDgridContent(dGrid, 5)}\n" +
-                                $"Size: {GetDgridContent(dGrid, 6)}\n" +
-                                $"In Stock: {GetDgridContent(dGrid, 7)}\n";
+                StockInfo.Instance.TboxInfo.Text = $"{GetDgridContent(dGrid, 5)}\n" +
+                                $"Id: {GetDgridContent(dGrid, 4)}\n" +
+                                $"Price: {GetDgridContent(dGrid, 8)}\n" +
+                                $"Color: {GetDgridContent(dGrid, 9)}\n" +
+                                $"Size: {GetDgridContent(dGrid, 10)}\n" +
+                                $"In Stock: {GetDgridContent(dGrid, 2)}\n";
 
-                EditStockInfo.Instance.TboxInfo.Text += $"\n\n{GetDgridContent(dGrid, 1)}\n" +
-                                       $"is a {GetDgridContent(dGrid, 3)} {GetDgridContent(dGrid, 2)} " +
-                                       $"and it costs {GetDgridContent(dGrid, 4)} Shekels.\n" +
-                                       $"we are working with this product\nsince: {GetDgridContent(dGrid, 8)}";
+                StockInfo.Instance.TboxInfo.Text += $"\n\n{GetDgridContent(dGrid, 5)}\n" +
+                                       $"is a {GetDgridContent(dGrid, 6)} {GetDgridContent(dGrid, 7)} " +
+                                       $"and it costs {GetDgridContent(dGrid, 8)} Shekels.\n" +
+                                       $"we are working with this product\nsince: {GetDgridContent(dGrid, 11)}";
 
-                EditStockEditItem.Instance.BoxItemId.Text = GetDgridContent(dGrid);
-
-
-                StockInfo.Instance.TboxInfo.Text = $"{GetDgridContent(dGrid, 1)}\n" +
-                                $"Id: {GetDgridContent(dGrid)}\n" +
-                                $"Price: {GetDgridContent(dGrid, 4)}\n" +
-                                $"Color: {GetDgridContent(dGrid, 5)}\n" +
-                                $"Size: {GetDgridContent(dGrid, 6)}\n" +
-                                $"In Stock: {GetDgridContent(dGrid, 7)}\n";
-
-                StockInfo.Instance.TboxInfo.Text += $"\n\n{GetDgridContent(dGrid, 1)}\n" +
-                                       $"is a {GetDgridContent(dGrid, 3)} {GetDgridContent(dGrid, 2)} " +
-                                       $"and it costs {GetDgridContent(dGrid, 4)} Shekels.\n" +
-                                       $"we are working with this product\nsince: {GetDgridContent(dGrid, 8)}";
-
-                StockSell.Instance.TboxSellID.Text = GetDgridContent(dGrid);
-
-                EditStockAddItem.Instance.BoxId.Text = GetDgridContent(dGrid);
-                EditStockEditItem.Instance.BoxItemName.Text = GetDgridContent(dGrid, 1);
-                EditStockEditItem.Instance.BoxItemPrice.Text = GetDgridContent(dGrid, 4);
-                EditStockEditItem.Instance.BoxQuantity.Text = GetDgridContent(dGrid, 7);
-                EditStockEditItem.Instance.BoxItemType.Text = GetDgridContent(dGrid, 2);
-                EditStockEditItem.Instance.BoxItemInnerType.Text = GetDgridContent(dGrid, 3);
-                EditStockEditItem.Instance.BoxSize.SelectedValue = GetDgridContent(dGrid, 5);
-                EditStockEditItem.Instance.BoxColor.SelectedValue = GetDgridContent(dGrid, 6);
+                StockSell.Instance.TboxSellID.Text = GetDgridContent(dGrid, 4);
             }
         }
         private void DgridController(DataGrid currentGrid)
@@ -394,7 +386,7 @@ namespace SportsStore.View
             }
             catch
             {
-                return String.Empty;
+                return string.Empty;
             }
         }
 

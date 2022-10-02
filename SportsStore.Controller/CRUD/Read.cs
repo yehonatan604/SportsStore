@@ -8,7 +8,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace SportsStore.Controller
 {
-    public class Read
+    public class Read : IDbConnectable
     {
         // Db Connector Access
         private readonly StoreContext db;
@@ -16,7 +16,7 @@ namespace SportsStore.Controller
         // Constructor
         public Read()
         {
-            db = DbConnector.GetInstance().GetDb();
+            db = DbConnector.GetInstance(this).Db;
         }
 
         // Checks
@@ -46,127 +46,67 @@ namespace SportsStore.Controller
             string text = record.Any() ? $"{email} Logged in succesfully" : "Login failed";
             return record.Any();
         }
-        public static int CheckAuthorizationLevel()
+        public int CheckAuthorizationLevel()
         {
-            return (int)(Write.LoggedInUser.UserType);
+            return (int)Write.LoggedInUser.UserType;
         }
 
         // GetSales Overloads - an overload for each case of given arguments
         public IEnumerable<object> GetSales(string arg1, string arg2) =>
-             from sale in db.Sales
+             from sale in db.SaleViews
              where
               (
-                  sale.Item.Price > Convert.ToInt16(arg1) &&
-                  sale.Item.Price < Convert.ToInt32(arg2)
+                  sale.ItemPrice > Convert.ToInt16(arg1) &&
+                  sale.ItemPrice < Convert.ToInt32(arg2)
               )
-             select new
-             {
-                 ItemID = sale.Item.Id,
-                 ItemName = sale.Item.Name,
-                 sale.Item.ItemType,
-                 sale.Item.Price,
-                 sale.Quantity,
-                 sale.TotalPrice,
-                 salesManId = sale.User.Id,
-                 salesManFName = sale.User.FirstName,
-                 salesManLName = sale.User.LastName,
-                 sale.SaleDate
-             };
+             select db.Sales;
         public IEnumerable<object> GetSales(string s, string arg1, string arg2, string arg3)
         {
             switch (s)
             {
                 case "ByItemId":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
-                                    sale.Item.Id == Convert.ToInt16(arg1) &&
-                                    sale.Item.Price > Convert.ToInt16(arg2) &&
-                                    sale.Item.Price < Convert.ToInt32(arg3)
+                                    sale.ThisItemId == Convert.ToInt16(arg1) &&
+                                    sale.ItemPrice > Convert.ToInt16(arg2) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg3)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 case "ByType":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
-                                    sale.Item.ItemType == arg1 &&
-                                    sale.Item.Price > Convert.ToInt16(arg2) &&
-                                    sale.Item.Price < Convert.ToInt32(arg3)
+                                    sale.ItemType == arg1 &&
+                                    sale.ItemPrice > Convert.ToInt16(arg2) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg3)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 case "BySalseMan":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
-                                    sale.User.Id == Convert.ToInt16(arg1) &&
-                                    sale.Item.Price > Convert.ToInt16(arg2) &&
-                                    sale.Item.Price < Convert.ToInt32(arg3)
+                                    sale.SalsemanId == Convert.ToInt16(arg1) &&
+                                    sale.ItemPrice > Convert.ToInt16(arg2) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg3)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 case "ByDate":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
                                     sale.SaleDate.Date.ToString() == arg1 &&
-                                    sale.Item.Price > Convert.ToInt16(arg2) &&
-                                    sale.Item.Price < Convert.ToInt32(arg3)
+                                    sale.ItemPrice > Convert.ToInt16(arg2) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg3)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 default:
                     {
@@ -189,19 +129,7 @@ namespace SportsStore.Controller
                                     sale.Item.Price > Convert.ToInt16(arg3) &&
                                     sale.Item.Price < Convert.ToInt32(arg4)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 default:
                     {
@@ -216,103 +144,55 @@ namespace SportsStore.Controller
             {
                 case "ByTypeInnerTypeDate":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
-                                    sale.Item.ItemType == arg1 &&
-                                    sale.Item.ItemInnerType == arg2 &&
+                                    sale.ItemType == arg1 &&
+                                    sale.ItemInnerType == arg2 &&
                                     sale.SaleDate.Date.ToString() == arg3 &&
-                                    sale.Item.Price > Convert.ToInt16(arg4) &&
-                                    sale.Item.Price < Convert.ToInt32(arg5)
+                                    sale.ItemPrice > Convert.ToInt16(arg4) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg5)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 case "ByTypeInnerTypeSalesman":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
-                                    sale.Item.ItemType == arg1 &&
-                                    sale.Item.ItemInnerType == arg2 &&
-                                    sale.User.Id == Convert.ToInt16(arg3) &&
-                                    sale.Item.Price > Convert.ToInt16(arg4) &&
-                                    sale.Item.Price < Convert.ToInt32(arg5)
+                                    sale.ItemType == arg1 &&
+                                    sale.ItemInnerType == arg2 &&
+                                    sale.SalsemanId == Convert.ToInt16(arg3) &&
+                                    sale.ItemPrice > Convert.ToInt16(arg4) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg5)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 case "ByTypeInnerTypeColor":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
-                                    sale.Item.ItemType == arg1 &&
-                                    sale.Item.ItemInnerType == arg2 &&
-                                    sale.Item.Color == arg3 &&
-                                    sale.Item.Price > Convert.ToInt16(arg4) &&
-                                    sale.Item.Price < Convert.ToInt32(arg5)
+                                    sale.ItemType == arg1 &&
+                                    sale.ItemInnerType == arg2 &&
+                                    sale.ItemColor == arg3 &&
+                                    sale.ItemPrice > Convert.ToInt16(arg4) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg5)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 case "ByTypeInnerTypeSize":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
-                                    sale.Item.ItemType == arg1 &&
-                                    sale.Item.ItemInnerType == arg2 &&
-                                    sale.Item.Size == arg3 &&
-                                    sale.Item.Price > Convert.ToInt16(arg4) &&
-                                    sale.Item.Price < Convert.ToInt32(arg5)
+                                    sale.ItemType == arg1 &&
+                                    sale.ItemInnerType == arg2 &&
+                                    sale.ItemSize == arg3 &&
+                                    sale.ItemPrice > Convert.ToInt16(arg4) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg5)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 default:
                     {
@@ -327,29 +207,17 @@ namespace SportsStore.Controller
             {
                 case "ByTypeInnerTypeColorSize":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
-                                    sale.Item.ItemType == arg1 &&
-                                    sale.Item.ItemInnerType == arg2 &&
-                                    sale.Item.Color == arg3 &&
-                                    sale.Item.Size == arg4 &&
-                                    sale.Item.Price > Convert.ToInt16(arg5) &&
-                                    sale.Item.Price < Convert.ToInt32(arg6)
+                                    sale.ItemType == arg1 &&
+                                    sale.ItemInnerType == arg2 &&
+                                    sale.ItemColor == arg3 &&
+                                    sale.ItemSize == arg4 &&
+                                    sale.ItemPrice > Convert.ToInt16(arg5) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg6)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 default:
                     {
@@ -364,57 +232,33 @@ namespace SportsStore.Controller
             {
                 case "ByTypeInnerTypeColorSizeSalesman":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
-                                    sale.Item.ItemType == arg1 &&
-                                    sale.Item.ItemInnerType == arg2 &&
-                                    sale.Item.Color == arg3 &&
-                                    sale.Item.Size == arg4 &&
-                                    sale.User.Id == Convert.ToInt16(arg5) &&
-                                    sale.Item.Price > Convert.ToInt16(arg6) &&
-                                    sale.Item.Price < Convert.ToInt32(arg7)
+                                    sale.ItemType == arg1 &&
+                                    sale.ItemInnerType == arg2 &&
+                                    sale.ItemColor == arg3 &&
+                                    sale.ItemSize == arg4 &&
+                                    sale.SalsemanId == Convert.ToInt16(arg5) &&
+                                    sale.ItemPrice > Convert.ToInt16(arg6) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg7)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 case "ByTypeInnerTypeColorSizeDate":
                     {
-                        return from sale in db.Sales
+                        return from sale in db.SaleViews
                                where
                                 (
-                                    sale.Item.ItemType == arg1 &&
-                                    sale.Item.ItemInnerType == arg2 &&
-                                    sale.Item.Color == arg3 &&
-                                    sale.Item.Size == arg4 &&
+                                    sale.ItemType == arg1 &&
+                                    sale.ItemInnerType == arg2 &&
+                                    sale.ItemColor == arg3 &&
+                                    sale.ItemSize == arg4 &&
                                     sale.SaleDate.Date.ToString() == arg5 &&
-                                    sale.Item.Price > Convert.ToInt16(arg6) &&
-                                    sale.Item.Price < Convert.ToInt32(arg7)
+                                    sale.ItemPrice > Convert.ToInt16(arg6) &&
+                                    sale.ItemPrice < Convert.ToInt32(arg7)
                                 )
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 default:
                     {
@@ -444,27 +288,7 @@ namespace SportsStore.Controller
             {
                 case "Sales":
                     {
-                        return from sale in db.Sales
-                               join item in db.Items
-                               on sale.Item.Id equals item.Id
-                               join user in db.Users
-                               on sale.User.Id equals user.Id
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = user.Id,
-                                   user.FirstName,
-                                   user.LastName,
-                                   sale.SaleDate
-                               };
+                        return db.SaleViews;
                     }
                 case "Users":
                     {
@@ -497,21 +321,7 @@ namespace SportsStore.Controller
                     }
                 default: // Stock View is default
                     {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                        return db.Stocks;
                     }
             };
         }
@@ -525,18 +335,7 @@ namespace SportsStore.Controller
                                join item in db.Items
                                on stock.Item.Id equals item.Id
                                where item.ItemType == arg1
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
 
                 case "ViewsByColor":
@@ -545,18 +344,7 @@ namespace SportsStore.Controller
                                join item in db.Items
                                on stock.Item.Id equals item.Id
                                where item.Color == arg1
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
                 case "ViewsBySize":
                     {
@@ -564,18 +352,7 @@ namespace SportsStore.Controller
                                join item in db.Items
                                on stock.Item.Id equals item.Id
                                where item.Size == arg1
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
                 case "LogsById":
                     {
@@ -638,18 +415,7 @@ namespace SportsStore.Controller
                                join item in db.Items
                                on stock.Item.Id equals item.Id
                                where item.Price > Convert.ToInt16(arg1) && item.Price < Convert.ToInt32(arg2)
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
                 case "ViewsByInnerType":
                     {
@@ -657,55 +423,20 @@ namespace SportsStore.Controller
                                join item in db.Items
                                on stock.Item.Id equals item.Id
                                where item.ItemType == arg1 && item.ItemInnerType == arg2
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
                 case "ByTypeInnerType":
                     {
                         return from sale in db.Sales
                                where sale.Item.ItemType == arg1 && sale.Item.ItemInnerType == arg2
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
 
                 case "ByTPrice":
                     {
                         return from sale in db.Sales
                                where sale.TotalPrice > Convert.ToInt32(arg1) && sale.TotalPrice < Convert.ToInt32(arg2)
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 case "LogsByActionDate":
                     {
@@ -769,18 +500,7 @@ namespace SportsStore.Controller
                                where item.ItemType == arg1 &&
                                      item.Price > Convert.ToInt16(arg2) &&
                                      item.Price < Convert.ToInt32(arg3)
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
                 case "ViewsByColor":
                     {
@@ -788,18 +508,7 @@ namespace SportsStore.Controller
                                join item in db.Items
                                on stock.Item.Id equals item.Id
                                where item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Color == arg3
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
                 case "ViewsBySize":
                     {
@@ -807,18 +516,7 @@ namespace SportsStore.Controller
                                join item in db.Items
                                on stock.Item.Id equals item.Id
                                where item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Size == arg3
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
                 case "LogsByAll":
                     {
@@ -854,18 +552,7 @@ namespace SportsStore.Controller
                                      item.ItemInnerType == arg2 &&
                                      item.Price > Convert.ToInt16(arg3) &&
                                      item.Price < Convert.ToInt32(arg4)
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
 
                 case "ViewsByAllNoPrice":
@@ -874,18 +561,7 @@ namespace SportsStore.Controller
                                join item in db.Items
                                on stock.Item.Id equals item.Id
                                where item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Color == arg3 && item.Size == arg4
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
                 default:
                     {
@@ -905,19 +581,7 @@ namespace SportsStore.Controller
                                where sale.Item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Color == arg3 && item.Size == arg4 &&
                                      item.Price > Convert.ToInt16(arg5) &&
                                      item.Price < Convert.ToInt32(arg6)
-                               select new
-                               {
-                                   ItemID = sale.Item.Id,
-                                   ItemName = sale.Item.Name,
-                                   sale.Item.ItemType,
-                                   sale.Item.Price,
-                                   sale.Quantity,
-                                   sale.TotalPrice,
-                                   salesManId = sale.User.Id,
-                                   salesManFName = sale.User.FirstName,
-                                   salesManLName = sale.User.LastName,
-                                   sale.SaleDate
-                               };
+                               select sale;
                     }
                 case "ViewsByAll":
                     {
@@ -930,18 +594,7 @@ namespace SportsStore.Controller
                                      item.Size == arg4 &&
                                      item.Price > Convert.ToInt16(arg5) &&
                                      item.Price < Convert.ToInt32(arg6)
-                               select new
-                               {
-                                   item.Id,
-                                   item.Name,
-                                   item.ItemType,
-                                   item.ItemInnerType,
-                                   item.Price,
-                                   item.Color,
-                                   item.Size,
-                                   InStock = stock.Quantity,
-                                   item.Created,
-                               };
+                               select stock;
                     }
                 default:
                     {
@@ -1031,6 +684,44 @@ namespace SportsStore.Controller
                         return new List<string>();
                     }
             }
+        }
+
+        // Get Charts
+        public List<string> GetSalesStatistics()
+        {
+            string bestItem = (from sale in db.Sales
+                               orderby sale.Item.Name ascending
+                               select sale.Item.Name).First();
+
+            string bestItemType = (from sale in db.Sales
+                                   orderby sale.Item.ItemType ascending
+                                   select sale.Item.ItemType).First();
+
+            string bestItemInnerType = (from sale in db.Sales
+                                        orderby sale.Item.ItemInnerType ascending
+                                        select sale.Item.ItemInnerType).First();
+
+            string bestItemColor = (from sale in db.Sales
+                                    orderby sale.Item.Color ascending
+                                    select sale.Item.Color).First();
+            
+            string bestItemSize = (from sale in db.Sales
+                                    orderby sale.Item.Size ascending
+                                    select sale.Item.Size).First();
+            
+            string bestSalesman = (from sale in db.Sales
+                                   orderby sale.User.Id ascending
+                                   select sale.User.FirstName).First() + " " +
+                                   (from sale in db.Sales
+                                    orderby sale.User.Id ascending
+                                    select sale.User.LastName).First();
+
+            string bestSaleDate = (from sale in db.Sales
+                                   orderby sale.SaleDate ascending
+                                   select sale.SaleDate.Date.ToString()).First();
+
+            return new List<string>() { bestItem, bestItemType, bestItemInnerType, 
+                                        bestItemColor, bestItemSize, bestSalesman, bestSaleDate };
         }
     }
 }

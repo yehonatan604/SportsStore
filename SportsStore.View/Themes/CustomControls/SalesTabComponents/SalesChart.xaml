@@ -5,8 +5,67 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SportsStore.View.Themes.CustomControls.SalesTabComponents"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             Height="364" Width="395">
+    <Grid >
+        <WrapPanel Orientation="Vertical" Margin="0,0,0,-40">
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Best Selling Item:" />
+                <TextBox x:Name="BoxItem" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Best Selling Item Type:" />
+                <TextBox x:Name="BoxItemType" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Best Selling Inner Type:" />
+                <TextBox x:Name="BoxItemInnerType" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Best Selling Color:" />
+                <TextBox x:Name="BoxItemColor" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Best Selling Size:" />
+                <TextBox x:Name="BoxItemSize" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Best Selling Salesman:" />
+                <TextBox x:Name="BoxSalesman" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Best Selling Date:" />
+                <TextBox x:Name="BoxDate" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+        </WrapPanel>
     </Grid>
+
 </UserControl>

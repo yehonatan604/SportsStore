@@ -5,11 +5,10 @@ using SportsStore.Model.Costumers;
 using SportsStore.Model.Items;
 using SportsStore.Model.Users;
 using SportStore.Controller.DbConnector;
-using System.Diagnostics;
 
 namespace SportsStore.Controller
 {
-    public class Write
+    public class Write :IDbConnectable
     {
         // Db Connector Access
         private readonly StoreContext db;
@@ -23,7 +22,7 @@ namespace SportsStore.Controller
         // Constructor
         public Write()
         {
-            db = DbConnector.GetInstance().GetDb();
+            db = DbConnector.GetInstance(this).Db;
             if (!(db.Users).Any())
             {
                 db.Users.Add(new User("NO_USER", "NO_USER", (UserTypes)500, "NO_USER", "1"));
@@ -86,11 +85,10 @@ namespace SportsStore.Controller
             db.SaveChanges();
         }
 
-        // Add to db Methods
+        // Add to Db Methods
         public bool AddStock(int itemId, int quantity)
         {
-            try
-            {
+            
                 var id = from stock in db.Stocks
                          where stock.Item.Id == itemId
                          select stock;
@@ -107,18 +105,23 @@ namespace SportsStore.Controller
                 {
                     Item = db.Items.Single(x => x.Id == itemId),
                     Quantity = quantity,
-                    LastAdded = DateTime.Now
+                    LastAdded = DateTime.Now,
+                    ThisItemId = db.Items.Single(x => x.Id == itemId).Id,
+                    ItemName = db.Items.Single(x => x.Id == itemId).Name,
+                    ItemType = db.Items.Single(x => x.Id == itemId).ItemType,
+                    ItemInnerType = db.Items.Single(x => x.Id == itemId).ItemInnerType,
+                    ItemPrice = db.Items.Single(x => x.Id == itemId).Price,
+                    ItemColor = db.Items.Single(x => x.Id == itemId).Color,
+                    ItemSize = db.Items.Single(x => x.Id == itemId).Size,
+                    ItemCreated = db.Items.Single(x => x.Id == itemId).Created,
                 });
                 db.SaveChanges();
                 return true;
-            }
-            catch
-            {
-                return false;
-            }
+            
         }
         public bool AddSale(int itemId, int quantity, int customerID)
         {
+
             if (quantity <= db.Stocks.Single(x => x.Item.Id == itemId).Quantity && LoggedInUser is not null)
             {
                 double price = db.Items.Single(x => x.Id == itemId).Price * quantity;
@@ -128,6 +131,7 @@ namespace SportsStore.Controller
                 db.Stocks.Single(x => x.Item.Id == itemId).Quantity -= quantity;
                 db.Users.Single(x => x.Id == LoggedInUser.Id).LastSale = DateTime.Now;
                 Customer customer = db.customers.Single(x => x.Id == customerID);
+                Item item = db.Items.Single(x => x.Id == itemId);
 
                 salesCount = salesCount == null ? 1 : salesCount++;
                 salesTotal = salesTotal == null ? price : salesTotal += price;
@@ -138,12 +142,30 @@ namespace SportsStore.Controller
 
                 db.Sales.Add(new()
                 {
-                    Item = db.Items.Single(x => x.Id == itemId),
+                    Item = item,
                     Quantity = quantity,
                     Customer = customer,
                     TotalPrice = price,
                     SaleDate = DateTime.Now,
                     User = LoggedInUser
+                });
+                db.SaveChanges();
+                db.SaleViews.Add(new()
+                {
+                    Quantity = quantity,
+                    TotalPrice = price,
+                    SaleDate = DateTime.Now,
+                    ThisItemId = db.Items.Single(x => x.Id == itemId).Id,
+                    ItemName = db.Items.Single(x => x.Id == itemId).Name,
+                    ItemType = db.Items.Single(x => x.Id == itemId).ItemType,
+                    ItemInnerType = db.Items.Single(x => x.Id == itemId).ItemInnerType,
+                    ItemPrice = db.Items.Single(x => x.Id == itemId).Price,
+                    ItemColor = db.Items.Single(x => x.Id == itemId).Color,
+                    ItemSize = db.Items.Single(x => x.Id == itemId).Size,
+                    SalsemanId = db.Users.Single(x => x.Id == LoggedInUser.Id).Id,
+                    SalsemanFname = db.Users.Single(x => x.Id == LoggedInUser.Id).FirstName,
+                    SalsemanLname = db.Users.Single(x => x.Id == LoggedInUser.Id).LastName
+
                 });
                 db.SaveChanges();
 
@@ -218,7 +240,7 @@ namespace SportsStore.Controller
             db.SaveChanges();
             return true;
         }
-        public bool EditStock(int itemId,string name = "", string price = "", string quantity = "",
+        public bool EditStock(int itemId, string name = "", string price = "", string quantity = "",
                               string itemType = "", string innerItemType = "", string color = "", string size = "")
         {
             try
@@ -276,7 +298,7 @@ namespace SportsStore.Controller
 
             AddLog(userId, $"id:{userId} exit program", ActionTypes.Exit);
         }
-        public void StartProgram() // Called when Window Start
+        public void OnStartProgram() // Called when Window Start
         {
             Read reader = new();
             int userId = NoUserId;
@@ -295,57 +317,39 @@ namespace SportsStore.Controller
             // if LoggedIns entity is empty, we get the id by the LoggedUserEmail:
             if (!db.LoggedIns.Any())
             {
-                userId = (from user in db.Users
-                          where user.Email == LoggedUserEmail
-                          orderby user.Id
-                          select user.Id).Last();
-
+                userId = db.Users.Single(x => x.Email == LoggedUserEmail).Id;
+                AddLoggedIn(userId);
+                LoggedInUser = (from user in db.LoggedIns
+                                orderby user.Id
+                                select user.User).Last();
+                if (IsRememberMe)
+                {
+                    LoggedInUser.RememberMe = true;
+                }
+                AddLog(LoggedInUser.Id, $"id:{LoggedInUser.Id} start program", ActionTypes.StartUp);
+                return;
             }
-
-            // if LoggedIns entity is not empty,
-            // we get the id & email from the LoggedIns entity & return:
-            else if (db.LoggedIns.Any())
+            // else we get the id & email from the LoggedIns entity:
+            else
             {
-                userId = (from user in db.LoggedIns
-                          orderby user.Id
-                          select user.User.Id).Last();
-
                 LoggedUserEmail = (from user in db.LoggedIns
                                    orderby user.Id
                                    select user.User.Email).Last();
-                AddLog(userId, $"id:{userId} start program", ActionTypes.StartUp);
+
+                userId = db.Users.Single(x => x.Email == LoggedUserEmail).Id;
+
+                LoggedInUser = (from user in db.LoggedIns
+                                orderby user.Id
+                                select user.User).Last();
+
+                if (LoggedInUser.RememberMe)
+                {
+                    IsRememberMe = true;
+                }
+                db.LoggedIns.Clear(db);
+                AddLoggedIn(userId);
+                AddLog(LoggedInUser.Id, $"id:{LoggedInUser.Id} start program", ActionTypes.StartUp);
                 return;
-
-            }
-
-            // we'll clear the LoggedIn entity & refill it,
-            // also, we'll add the logged in user into the LoggedInUser static Property .
-            db.LoggedIns.Clear(db);
-            AddLoggedIn(userId);
-            LoggedInUser = (from user in db.LoggedIns
-                            orderby user.Id
-                            select user.User).Last();
-
-            // now that LoggedInUser must be Valued -
-            // if "Remember Me" option was used last session:
-            if (IsRememberMe)
-            {
-                LoggedInUser.RememberMe = true;
-                LoggedInUser = (from user in db.LoggedIns
-                                orderby user.Id
-                                select user.User).Last();
-            }
-
-            AddLog(LoggedInUser.Id, $"id:{LoggedInUser.Id} start program", ActionTypes.StartUp);
-        }
-        public void OnStartProgram()// Called in MainWindow constructor
-        {
-            if (db.LoggedIns.Any())
-            {
-                IsRememberMe = true;
-                LoggedInUser = (from user in db.LoggedIns
-                                orderby user.Id
-                                select user.User).Last();
             }
         }
     }

@@ -101,7 +101,7 @@ namespace SportsStore.View.Themes.CustomControls.SalesTabComponents
 
         private void CmbBoxByInnerType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (CmbBoxByItemType.SelectedIndex == 0)
+            if (CmbBoxByItemType.SelectedItem is ItemTypes.Clothe)
             {
                 CmbBoxBySize.Items.Clear();
                 switch (CmbBoxByInnerType.SelectedItem)
