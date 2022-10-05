@@ -51,6 +51,69 @@ namespace SportsStore.Controller
             return (int)Write.LoggedInUser.UserType;
         }
 
+        // GetCustomers Overloads - an overload for each case of given arguments
+        public IEnumerable<object> GetCustomers(string arg1, string arg2, string arg3, string arg4, string arg5, string arg6) =>
+
+            from customer in db.customers
+            where
+             (
+                 DateTime.Now.Year - customer.DateOfBirth.Year > Convert.ToInt16(arg1) &&
+                 DateTime.Now.Year - customer.DateOfBirth.Year < Convert.ToInt16(arg2) &&
+                 customer.TotalPurchases > Convert.ToInt16(arg3) &&
+                 customer.TotalPurchases < Convert.ToInt32(arg4) &&
+                 customer.PurchasesCount > Convert.ToInt16(arg5) &&
+                 customer.PurchasesCount < Convert.ToInt32(arg6)
+             )
+            select customer;
+        public IEnumerable<object> GetCustomers(string s, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6, string arg7)
+        {
+            return s switch
+            {
+                "ById" => from customer in db.customers
+                          where
+                           (
+                               customer.Id == Convert.ToInt16(arg7) &&
+                               DateTime.Now.Year - customer.DateOfBirth.Year > Convert.ToInt16(arg1) &&
+                               DateTime.Now.Year - customer.DateOfBirth.Year < Convert.ToInt16(arg2) &&
+                               customer.TotalPurchases > Convert.ToInt16(arg3) &&
+                               customer.TotalPurchases < Convert.ToInt32(arg4) &&
+                               customer.PurchasesCount > Convert.ToInt16(arg5) &&
+                               customer.PurchasesCount < Convert.ToInt32(arg6)
+                           )
+                          select customer,
+                "ByDate" => (from customer in db.customers
+                             join sale in db.Sales
+                             on customer.Id equals sale.Customer.Id
+                             where
+                              (
+                                  sale.SaleDate.Date.ToString() == arg7 &&
+                                  DateTime.Now.Year - customer.DateOfBirth.Year > Convert.ToInt16(arg1) &&
+                                  DateTime.Now.Year - customer.DateOfBirth.Year < Convert.ToInt16(arg2) &&
+                                  customer.TotalPurchases > Convert.ToInt16(arg3) &&
+                                  customer.TotalPurchases < Convert.ToInt32(arg4) &&
+                                  customer.PurchasesCount > Convert.ToInt16(arg5) &&
+                                  customer.PurchasesCount < Convert.ToInt32(arg6)
+                              )
+                             select customer).Distinct(),
+            };
+        }
+        public IEnumerable<object> GetCustomers(string s, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6, string arg7, string arg8) =>
+                  from customer in db.customers
+                  join sale in db.Sales
+                  on customer.Id equals sale.Customer.Id
+                  where
+                                (
+                                    customer.Id == Convert.ToInt16(arg7) &&
+                                    sale.SaleDate.Date.ToString() == arg8 &&
+                                    DateTime.Now.Year - customer.DateOfBirth.Year > Convert.ToInt16(arg1) &&
+                                    DateTime.Now.Year - customer.DateOfBirth.Year < Convert.ToInt16(arg2) &&
+                                    customer.TotalPurchases > Convert.ToInt16(arg3) &&
+                                    customer.TotalPurchases < Convert.ToInt32(arg4) &&
+                                    customer.PurchasesCount > Convert.ToInt16(arg5) &&
+                                    customer.PurchasesCount < Convert.ToInt32(arg6)
+                                )
+                  select customer;
+
         // GetSales Overloads - an overload for each case of given arguments
         public IEnumerable<object> GetSales(string arg1, string arg2) =>
              from sale in db.SaleViews
@@ -59,7 +122,7 @@ namespace SportsStore.Controller
                   sale.ItemPrice > Convert.ToInt16(arg1) &&
                   sale.ItemPrice < Convert.ToInt32(arg2)
               )
-             select db.Sales;
+             select sale;
         public IEnumerable<object> GetSales(string s, string arg1, string arg2, string arg3)
         {
             switch (s)
@@ -268,19 +331,6 @@ namespace SportsStore.Controller
 
         }
 
-        public List<string> GetSaleInfo(string customerId, string saleId)
-        {
-            return new List<string>()
-            {
-                db.customers.Single(x => x.Id == Convert.ToInt16(customerId)).FirstName,
-                db.customers.Single(x => x.Id == Convert.ToInt16(customerId)).LastName,
-                db.Sales.Where(x => x.Id == Convert.ToInt16(saleId)).Select(x => x.Item.Name).ToList()[0],
-                db.Sales.Single(x => x.Id == Convert.ToInt16(saleId)).Quantity.ToString(),
-                db.Sales.Single(x => x.Id == Convert.ToInt16(saleId)).TotalPrice.ToString(),
-                db.Sales.Single(x => x.Id == Convert.ToInt16(saleId)).SaleDate.ToString(),
-            };
-        }
-
         // GetTable Overloads - an overload for each case of given arguments
         public IEnumerable<object> GetTable(string s = "*")
         {
@@ -289,6 +339,10 @@ namespace SportsStore.Controller
                 case "Sales":
                     {
                         return db.SaleViews;
+                    }
+                case "Customers":
+                    {
+                        return db.customers;
                     }
                 case "Users":
                     {
@@ -603,11 +657,18 @@ namespace SportsStore.Controller
             }
         }
 
-        public IEnumerable<object> Search(string str)
+        // Search Methods
+        public IEnumerable<object> ItemSearch(string str)
         {
             return from items in db.Items
                    where (items.Name).Contains(str)
                    select items;
+        }
+        public IEnumerable<object> CustomerSearch(string str)
+        {
+            return from customer in db.customers
+                   where (customer.FirstName).Contains(str) || (customer.LastName).Contains(str)
+                   select customer;
         }
 
         // Return UserType as string 
@@ -616,78 +677,76 @@ namespace SportsStore.Controller
             return db.Users.Single(user => user.Id == id).UserType.ToString();
         }
 
-        // Return List Methods
+        // Return List Overloads for each case of given arguments
         public List<string> GetList(string s)
         {
-            switch (s)
+            return s switch
             {
-                case "ByItem":
-                    {
-                        return (from sale in db.Sales
-                                select sale.Item.ItemType.ToString()).Distinct().ToList();
-                    }
-                case "BySalesMan":
-                    {
-                        return (from sale in db.Sales
-                                select sale.User.Id.ToString()).Distinct().ToList();
-                    }
-                case "ByDate":
-                    {
-                        return (from sale in db.Sales
-                                select sale.SaleDate.Date.ToString()).Distinct().ToList();
-                    }
-                case "ByLogUserId":
-                    {
-                        return (from log in db.Logs
-                                select log.User.Id.ToString()).Distinct().ToList();
-                    }
-                case "ByLogAction":
-                    {
-                        return (from log in db.Logs
-                                select log.ActionType.ToString()).Distinct().ToList();
-                    }
-                case "ByLogDate":
-                    {
-                        return (from log in db.Logs
-                                select log.DateTime.Date.ToString()).Distinct().ToList();
-                    }
-                case "ByCostumer":
-                    {
-                        return (from costumer in db.customers
-                                select costumer.Id.ToString()).Distinct().ToList();
-                    }
-                default:
-                    {
-                        return new List<string>();
-                    }
-            }
+                "ByItem" => (from sale in db.Sales
+                             select sale.Item.ItemType.ToString()).Distinct().ToList(),
+
+                "BySalesMan" => (from sale in db.Sales
+                                 select sale.User.Id.ToString()).Distinct().ToList(),
+
+                "ByDate" => (from sale in db.Sales
+                             select sale.SaleDate.Date.ToString()).Distinct().ToList(),
+
+                "ByLogUserId" => (from log in db.Logs
+                                  select log.User.Id.ToString()).Distinct().ToList(),
+
+                "ByLogAction" => (from log in db.Logs
+                                  select log.ActionType.ToString()).Distinct().ToList(),
+
+                "ByLogDate" => (from log in db.Logs
+                                select log.DateTime.Date.ToString()).Distinct().ToList(),
+
+                "ByCostumer" => (from costumer in db.customers
+                                 select costumer.Id.ToString()).Distinct().ToList(),
+
+                _ =>
+                         new List<string>()
+            };
         }
-        public List<string> GetList(string s, string arg1, string arg2 = "")
+        public List<string> GetList(string s, string arg1)
         {
-            List<string> list;
-            switch (s)
+            return s switch
             {
-                case "ByCostumerDate":
-                    {
-                        return (from sale in db.Sales
-                                where sale.Customer.Id == Convert.ToInt16(arg1)
-                                select sale.SaleDate.Date.ToString()).Distinct().ToList();
-                    }
-                case "SalesByDate":
-                    {
-                        return (from sale in db.Sales
-                                where sale.Customer.Id == Convert.ToInt16(arg1) && sale.SaleDate.Date.ToString() == arg2
-                                select $"{sale.Id}").Distinct().ToList();
-                    }
-                default:
-                    {
-                        return new List<string>();
-                    }
-            }
+                "CustomerDetails" => new List<string>()
+                {
+                    db.customers.Single(x => x.Id.ToString() == arg1).FirstName,
+                    db.customers.Single(x => x.Id.ToString() == arg1).LastName,
+                    db.customers.Single(x => x.Id.ToString() == arg1).Email,
+                    db.customers.Single(x => x.Id.ToString() == arg1).DateOfBirth.Date.ToString()
+                },
+                
+                _ => new List<string>()
+            };
+        }
+        public List<string> GetList(string s, string arg1, string arg2)
+        {
+            return s switch
+            {
+                "SalesByDate" => (from sale in db.Sales
+                                  where sale.Customer.Id == Convert.ToInt16(arg1) && sale.SaleDate.Date.ToString() == arg2
+                                  select $"{sale.Id}").Distinct().ToList(),
+
+                "SalesInfo" => new List<string>()
+                {
+                    db.customers.Single(x => x.Id == Convert.ToInt16(arg1)).FirstName,
+                    db.customers.Single(x => x.Id == Convert.ToInt16(arg1)).LastName,
+                    db.Sales.Where(x => x.Id == Convert.ToInt16(arg2)).Select(x => x.Item.Name).ToList()[0],
+                    db.Sales.Single(x => x.Id == Convert.ToInt16(arg2)).Quantity.ToString(),
+                    db.Sales.Single(x => x.Id == Convert.ToInt16(arg2)).TotalPrice.ToString(),
+                    db.Sales.Single(x => x.Id == Convert.ToInt16(arg2)).SaleDate.ToString(),
+                },
+
+                _ => new List<string>()
+            };
+
         }
 
-        // Get Charts
-        public List<string> GetSalesStatistics()
+        // Get Stats Methods
+        public List<string> GetSalesStats()
         {
             string bestItem = (from sale in db.Sales
                                orderby sale.Item.Name ascending
@@ -704,24 +763,41 @@ namespace SportsStore.Controller
             string bestItemColor = (from sale in db.Sales
                                     orderby sale.Item.Color ascending
                                     select sale.Item.Color).First();
-            
+
             string bestItemSize = (from sale in db.Sales
-                                    orderby sale.Item.Size ascending
-                                    select sale.Item.Size).First();
-            
+                                   orderby sale.Item.Size ascending
+                                   select sale.Item.Size).First();
+
             string bestSalesman = (from sale in db.Sales
                                    orderby sale.User.Id ascending
-                                   select sale.User.FirstName).First() + " " +
-                                   (from sale in db.Sales
-                                    orderby sale.User.Id ascending
-                                    select sale.User.LastName).First();
+                                   select $"{sale.User.FirstName} {sale.User.LastName}").First();
 
             string bestSaleDate = (from sale in db.Sales
                                    orderby sale.SaleDate ascending
                                    select sale.SaleDate.Date.ToString()).First();
 
-            return new List<string>() { bestItem, bestItemType, bestItemInnerType, 
+            return new List<string>() { bestItem, bestItemType, bestItemInnerType,
                                         bestItemColor, bestItemSize, bestSalesman, bestSaleDate };
+        }
+        public List<string> GetCustomerStats()
+        {
+            string mostSpent = (from customer in db.customers
+                                orderby customer.TotalPurchases descending
+                                select $"{customer.FirstName} {customer.LastName}").First();
+
+            string mostReturning = (from customer in db.customers
+                                    orderby customer.PurchasesCount descending
+                                    select $"{customer.FirstName} {customer.LastName}").First();
+
+            string mostVeteran = (from customer in db.customers
+                                  orderby customer.AddedAt ascending
+                                  select $"{customer.FirstName} {customer.LastName}").First();
+
+            string mostNew = (from customer in db.customers
+                              orderby customer.AddedAt descending
+                              select $"{customer.FirstName} {customer.LastName}").First();
+
+            return new List<string>() { mostSpent, mostReturning, mostVeteran, mostNew };
         }
     }
 }

@@ -30,7 +30,7 @@ namespace SportsStore.View.Themes.CustomControls
         }
         private void TboxSearch_OnKeyUp(object sender, KeyEventArgs e)
         {
-            MainWindow.Instance.Dgrid1.ItemsSource = reader.Search(TboxSearch.Text).ToList();
+            MainWindow.Instance.Dgrid1.ItemsSource = reader.ItemSearch(TboxSearch.Text).ToList();
 
         }
         private void CmbBoxViewByInnerItemType_SelectionChanged(object sender, SelectionChangedEventArgs e)

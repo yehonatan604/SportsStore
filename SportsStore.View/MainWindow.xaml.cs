@@ -14,6 +14,7 @@ using System.Windows.Media;
 using SportsStore.View.Themes.CustomControls;
 using SportsStore.View.Themes.CustomControls.EditStockTabComponents;
 using SportsStore.View.Themes.CustomControls.SalesTabComponents;
+using SportsStore.View.Themes.CustomControls.CostumerTabCComponents;
 
 namespace SportsStore.View
 {
@@ -79,6 +80,30 @@ namespace SportsStore.View
             DgridController(Dgrid1);
         }
 
+        // Customers_Tab Event Handlers
+        private void Customers_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            RefreshDataGrid(Dgrid3);
+            DgridController(Dgrid3);
+            CustomerStats.Instance.CollectCharts();
+        }
+        private void Dgrid3_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                CustomersInfo.Instance.TboxInfo.Text = $"Customer: {GetDgridContent(Dgrid3, 1)} {GetDgridContent(Dgrid3, 2)}\n" +
+                                    $"id: {GetDgridContent(Dgrid3)}\n" +
+                                    $"Email: {GetDgridContent(Dgrid3, 3)}\n\n" +
+                                    $"Purchases Count: {GetDgridContent(Dgrid3, 7)}\n" +
+                                    $"Total Purchases: {float.Parse(GetDgridContent(Dgrid3, 6))}$\n" +
+                                    $"Last Purchase at: {GetDgridContent(Dgrid3, 9)}\n";
+            }
+            catch
+            {
+                RefreshDataGrid(Dgrid3);
+            }
+        }
+
         // EditStock_Tab Event Handlers
         private void BoxItemPrice_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -121,14 +146,9 @@ namespace SportsStore.View
         // Sales_Tab Event Handlers
         private void Sales_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (reader.CheckAuthorizationLevel() > 1)
-            {
-                MessageBox.Show("You are not authorized to do that!");
-                return;
-            }
             RefreshDataGrid(Dgrid2);
             DgridController(Dgrid2);
-            SalesChart.Instance.CollectCharts();
+            SalesStats.Instance.CollectCharts();
         }
         private void Dgrid2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -139,6 +159,8 @@ namespace SportsStore.View
                                               $"at {GetDgridContent(Dgrid2, 1)}\n" +
                                               $"by: {GetDgridContent(Dgrid2, 12)} {GetDgridContent(Dgrid2, 13)}, Id: {GetDgridContent(Dgrid2, 11)}";
         }
+
+
         // Users_Tab Event Handlers
         private void Users_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -149,28 +171,6 @@ namespace SportsStore.View
             }
             RefreshDataGrid(Dgrid3);
             DgridController(Dgrid3);
-        }
-        private void Dgrid3_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                string salesCount = GetDgridContent(Dgrid3, 6) == string.Empty ? "0" : GetDgridContent(Dgrid3, 6);
-                string salesTotal = GetDgridContent(Dgrid3, 5) == string.Empty ? "0" : GetDgridContent(Dgrid3, 5);
-
-                TboxUserInfo.Text = $"User: {GetDgridContent(Dgrid3, 1)} {GetDgridContent(Dgrid3, 2)}, " +
-                                    $"{reader.GetUserType(Convert.ToInt16(GetDgridContent(Dgrid3)))}\n" +
-                                    $"id: {GetDgridContent(Dgrid3)}\n" +
-                                    $"Email: {GetDgridContent(Dgrid3, 3)}\n\n" +
-                                    $"Sales: {salesCount}\n" +
-                                    $"Sales Total: {salesTotal}$\n" +
-                                    $"Hire Date: {GetDgridContent(Dgrid3, 4)}\n";
-
-                LblUserId.Text = $"User Id: {GetDgridContent(Dgrid3)}";
-            }
-            catch
-            {
-                RefreshDataGrid(Dgrid3);
-            }
         }
         private void BtnChangeUserType_Click(object sender, RoutedEventArgs e)
         {
@@ -370,7 +370,7 @@ namespace SportsStore.View
             }
             if (dGrid == Dgrid3)
             {
-                Dgrid3.ItemsSource = reader.GetTable("Users").ToList();
+                Dgrid3.ItemsSource = reader.GetTable("Customers").ToList();
             }
             if (dGrid == Dgrid4)
             {
@@ -405,6 +405,7 @@ namespace SportsStore.View
                 tb.Foreground = new SolidColorBrush(Colors.LemonChiffon);
             }
         }
+
     }
 }
 

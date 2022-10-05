@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="SportsStore.View.Themes.CustomControls.CostumerTabCComponents.CustomerEdit"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SportsStore.View.Themes.CustomControls.CostumerTabCComponents"
+             mc:Ignorable="d" 
+             Height="220" Width="395">
+    <Grid >
+        <WrapPanel Orientation="Vertical" x:Name="OuterWrapPanel">
+            <Grid Margin="5,10,0,0" Width="380">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.7*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Customer:" />
+                <ComboBox x:Name="BoxCustomerId" Width="140" Margin="0,6,0,0" Grid.Column="1" Style="{StaticResource CmboBoxComponentaStyle}" HorizontalAlignment="Left"  SelectionChanged="BoxCustomerId_SelectionChanged"/>
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.7*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="First Name:" />
+                <TextBox x:Name="BoxFirstName" Width="140" Margin="0,6,0,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.7*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Last Name:" />
+                <TextBox x:Name="BoxLastName" Width="140" Margin="0,6,0,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+                <Button x:Name="BtnChange" Content="Change" Click="BtnChange_Click" Grid.Column="2" Margin="0,6,0,0"/>
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.7*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Email:" />
+                <TextBox x:Name="BoxEmail" Width="140" Margin="0,6,0,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.7*" />
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Date of Birth:" Margin="0,10,0,0" />
+                <DatePicker x:Name="BoxDateOfBirth" Width="140" Margin="0,6,0,0" Grid.Column="1" HorizontalAlignment="Left" Background="#FFE9E9E9" BorderBrush="Gray" BorderThickness="0.5,0.5,2,2" />
+            </Grid>
+        </WrapPanel>
+    </Grid>
+</UserControl>

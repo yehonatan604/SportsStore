@@ -62,7 +62,7 @@ namespace SportsStore.View.Themes.CustomControls
 
             if (CmbBoxCostumer.SelectedItem is string costumerId && CmbBoxSale.SelectedItem is string sale)
             {
-                list = reader.GetSaleInfo(costumerId, sale);
+                list = reader.GetList("SalesInfo", costumerId, sale);
 
                 stockInfo.TboxInfo.Text = $"{list[0]} {list[1]}\n" +
                                           $"Id: {costumerId}\n" +

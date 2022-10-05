@@ -65,6 +65,29 @@ namespace SportsStore.Controller
             db.SaveChanges();
         }
 
+        // Public Methods for editing selected customer details
+
+        public void ChangeCustomerFirstName(int id, string fName)
+        {
+            db.customers.Single(customer => customer.Id == id).FirstName = fName;
+            db.SaveChanges();
+        }
+        public void ChangeCustomerLastName(int id, string lName)
+        {
+            db.customers.Single(customer => customer.Id == id).LastName = lName;
+            db.SaveChanges();
+        }
+        public void ChangeCustomerEmail(int id, string email)
+        {
+            db.customers.Single(customer => customer.Id == id).Email = email;
+            db.SaveChanges();
+        }
+        public void ChangeCustomerDOB(int id, string dob)
+        {
+            db.customers.Single(customer => customer.Id == id).DateOfBirth = Convert.ToDateTime(dob);
+            db.SaveChanges();
+        }
+
         // Add to log Methods
         public void AddLoggedIn(int id)
         {

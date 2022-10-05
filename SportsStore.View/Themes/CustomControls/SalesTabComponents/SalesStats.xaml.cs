@@ -17,13 +17,13 @@ using System.Windows.Shapes;
 namespace SportsStore.View.Themes.CustomControls.SalesTabComponents
 {
     /// <summary>
-    /// Interaction logic for SalesChart.xaml
+    /// Interaction logic for SalesStats.xaml
     /// </summary>
-    public partial class SalesChart : UserControl
+    public partial class SalesStats : UserControl
     {
-        public static SalesChart Instance;
+        public static SalesStats Instance;
         private readonly Read reader;
-        public SalesChart()
+        public SalesStats()
         {
             InitializeComponent();
             reader = new();
@@ -32,13 +32,13 @@ namespace SportsStore.View.Themes.CustomControls.SalesTabComponents
 
         public void CollectCharts()
         {
-            BoxItem.Text = reader.GetSalesStatistics()[0];
-            BoxItemType.Text = reader.GetSalesStatistics()[1];
-            BoxItemInnerType.Text = reader.GetSalesStatistics()[2];
-            BoxItemColor.Text = reader.GetSalesStatistics()[3];
-            BoxItemSize.Text = reader.GetSalesStatistics()[4];
-            BoxSalesman.Text = reader.GetSalesStatistics()[5];
-            BoxDate.Text = reader.GetSalesStatistics()[6];
+            BoxItem.Text = reader.GetSalesStats()[0];
+            BoxItemType.Text = reader.GetSalesStats()[1];
+            BoxItemInnerType.Text = reader.GetSalesStats()[2];
+            BoxItemColor.Text = reader.GetSalesStats()[3];
+            BoxItemSize.Text = reader.GetSalesStats()[4];
+            BoxSalesman.Text = reader.GetSalesStats()[5];
+            BoxDate.Text = reader.GetSalesStats()[6];
         }
     }
 }

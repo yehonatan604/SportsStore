@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="SportsStore.View.Themes.CustomControls.CostumerTabCComponents.CustomerStats"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SportsStore.View.Themes.CustomControls.CostumerTabCComponents"
+             mc:Ignorable="d" 
+             Height="182" Width="395">
+    <Grid >
+        <WrapPanel Orientation="Vertical" >
+            <Grid Margin="5,10,0,0" Width="380">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.2*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Customer who spent the most:" />
+                <TextBox x:Name="BoxSMostSpent" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.2*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="The most returning Customer:" />
+                <TextBox x:Name="BoxMostReturning" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.2*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Most veteran Customer:" />
+                <TextBox x:Name="BoxMostVeteran" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+            <Grid Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.2*" />
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource TblockComponenta}" Text="Most new Customer:" Margin="0,10,0,0" />
+                <TextBox x:Name="BoxMostNew" Width="100" Margin="25,6,0,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" />
+            </Grid>
+        </WrapPanel>
+    </Grid>
+</UserControl>
