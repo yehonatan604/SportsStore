@@ -36,8 +36,6 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
 
         private void BtnChange_Click(object sender, RoutedEventArgs e)
         {
-            int i = 0;
-
             try
             {
                 if (BoxCustomerId.SelectedItem is string customerId)
@@ -49,7 +47,6 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
                             if (control is TextBox tb)
                             {
                                 if (!string.IsNullOrEmpty(tb.Text) &&
-                                    tb.Text != reader.GetList("CustomerDetails", customerId)[i] &&
                                     MessageBox.Show($"You are about to change Customer {tb.Name[3..]} " +
                                                     $"to: {tb.Text}.\n " +
                                                     "are you sure?",
@@ -57,8 +54,13 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
                                                     MessageBoxButton.YesNo,
                                                     MessageBoxImage.Question) == MessageBoxResult.Yes)
                                 {
-                                    writer.ChangeCustomerFirstName(Convert.ToInt16(customerId), BoxFirstName.Text);
-                                    i++;
+                                    switch (tb.Name[3..])
+                                    {
+                                        case "FirstName": { writer.ChangeCustomerFirstName(Convert.ToInt16(customerId), tb.Text); break;};
+                                        case "LastName": { writer.ChangeCustomerLastName(Convert.ToInt16(customerId), tb.Text); break;};
+                                        case "Email": { writer.ChangeCustomerEmail(Convert.ToInt16(customerId), tb.Text); break;};
+                                        case "DateOfBirth": { writer.ChangeCustomerDOB(Convert.ToInt16(customerId), tb.Text); break;};
+                                    };
                                 }
                             }
                         }

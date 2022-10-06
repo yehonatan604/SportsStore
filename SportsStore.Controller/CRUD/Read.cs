@@ -53,7 +53,6 @@ namespace SportsStore.Controller
 
         // GetCustomers Overloads - an overload for each case of given arguments
         public IEnumerable<object> GetCustomers(string arg1, string arg2, string arg3, string arg4, string arg5, string arg6) =>
-
             from customer in db.customers
             where
              (
@@ -331,6 +330,63 @@ namespace SportsStore.Controller
 
         }
 
+        // GetUser Overloads - an overload for each case of given arguments
+
+        public IEnumerable<object> GetUsers(string s, string arg1) =>
+            s switch
+            {
+                "ByType" => from user in db.Users
+                            where user.UserType == (UserTypes)Convert.ToInt16(arg1)
+                            select user,
+
+                "BySaleDate" => from user in db.Users
+                                join sale in db.Sales
+                                on user.Id equals sale.User.Id
+                                where sale.SaleDate.Date.ToString() == arg1
+                                select user,
+
+                "ByHireYear" => from user in db.Users
+                                where user.HireDate.Year.ToString() == arg1
+                                select user,
+
+                _ => throw new NotImplementedException()
+            };
+        public IEnumerable<object> GetUsers(string s, string arg1, string arg2) =>
+            s switch
+            {
+                "ByTypeSaleDate" => from user in db.Users
+                                    join sale in db.Sales
+                                    on user.Id equals sale.User.Id
+                                    where user.UserType == (UserTypes)Convert.ToInt16(arg1) && sale.SaleDate.Date.ToString() == arg2
+                                    select user,
+
+                "ByTypeHireYear" => from user in db.Users
+                                    where user.UserType == (UserTypes)Convert.ToInt16(arg1) && user.HireDate.Year.ToString() == arg2
+                                    select user,
+
+                "BySaleDateHireYear" => from user in db.Users
+                                        join sale in db.Sales
+                                    on user.Id equals sale.User.Id
+                                        where sale.SaleDate.Date.ToString() == arg1 && user.HireDate.Year.ToString() == arg1
+                                        select user,
+
+                _ => throw new NotImplementedException()
+            };
+        public IEnumerable<object> GetUsers(string s, string arg1, string arg2, string arg3) =>
+            s switch
+            {
+                "ByAll" => (from user in db.Users
+                           join sale in db.Sales
+                            on user.Id equals sale.User.Id
+                           where 
+                            user.UserType == (UserTypes)Convert.ToInt16(arg1) && 
+                            sale.SaleDate.Date.ToString() == arg2 && 
+                            user.HireDate.Year.ToString() == arg3
+                           select user).Distinct(),
+
+                _ => throw new NotImplementedException()
+            };
+
         // GetTable Overloads - an overload for each case of given arguments
         public IEnumerable<object> GetTable(string s = "*")
         {
@@ -346,18 +402,7 @@ namespace SportsStore.Controller
                     }
                 case "Users":
                     {
-                        return from user in db.Users
-                               select new
-                               {
-                                   UserID = user.Id,
-                                   user.FirstName,
-                                   user.LastName,
-                                   user.Email,
-                                   user.HireDate,
-                                   user.SalesTotal,
-                                   user.SalesCount,
-                                   UserType = user.UserType.ToString()
-                               };
+                        return db.Users;
                     }
                 case "Logs":
                     {
@@ -670,6 +715,18 @@ namespace SportsStore.Controller
                    where (customer.FirstName).Contains(str) || (customer.LastName).Contains(str)
                    select customer;
         }
+        public IEnumerable<object> UsersSearchName(string str)
+        {
+            return from user in db.Users
+                   where (user.FirstName).Contains(str) || (user.LastName).Contains(str)
+                   select user;
+        }
+        public IEnumerable<object> UsersSearchId(string str)
+        {
+            return from user in db.Users
+                   where (user.Id.ToString()).Contains(str)
+                   select user;
+        }
 
         // Return UserType as string 
         public string GetUserType(int id)
@@ -703,6 +760,11 @@ namespace SportsStore.Controller
                 "ByCostumer" => (from costumer in db.customers
                                  select costumer.Id.ToString()).Distinct().ToList(),
 
+                "ByHireDate" => (from user in db.Users
+                                 select user.HireDate.Year.ToString()).Distinct().ToList(),
+                "Users" => (from user in db.Users
+                            select user.Id.ToString()).ToList(),
+
                 _ =>
                          new List<string>()
             };
@@ -718,7 +780,7 @@ namespace SportsStore.Controller
                     db.customers.Single(x => x.Id.ToString() == arg1).Email,
                     db.customers.Single(x => x.Id.ToString() == arg1).DateOfBirth.Date.ToString()
                 },
-                
+
                 _ => new List<string>()
             };
         }

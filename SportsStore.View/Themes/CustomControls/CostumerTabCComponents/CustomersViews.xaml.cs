@@ -68,8 +68,9 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
                                 ("ByDate", minAge, maxAge, minPrice, maxPrice, minSalesCount, maxSalesCount, CmbBoxByDate.Text).ToList() :
                                 byId && byDate ? reader.GetCustomers
                                 ("ByDate", minAge, maxAge, minPrice, maxPrice, minSalesCount, maxSalesCount, BoxById.Text, CmbBoxByDate.Text).ToList() :
-                                // else by price only:
-                                reader.GetTable("Customers").ToList();
+                                // else:
+                                reader.GetCustomers
+                                (minAge, maxAge, minPrice, maxPrice, minSalesCount, maxSalesCount).ToList();
         }
 
         private void BoxSearch_KeyUp(object sender, KeyEventArgs e)

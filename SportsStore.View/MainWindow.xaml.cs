@@ -15,6 +15,7 @@ using SportsStore.View.Themes.CustomControls;
 using SportsStore.View.Themes.CustomControls.EditStockTabComponents;
 using SportsStore.View.Themes.CustomControls.SalesTabComponents;
 using SportsStore.View.Themes.CustomControls.CostumerTabCComponents;
+using SportsStore.View.Themes.CustomControls.UsersTabComponents;
 
 namespace SportsStore.View
 {
@@ -47,7 +48,7 @@ namespace SportsStore.View
             CmboBoxFiller.Fill(new ItemTypes(), SaleViews.Instance.CmbBoxByItemType);
             CmboBoxFiller.Fill(new ColorTypes(), EditStockAddItem.Instance.BoxColor);
             CmboBoxFiller.Fill(new ColorTypes(), EditStockEditItem.Instance.BoxColor);
-            CmboBoxFiller.Fill(new UserTypes(), CmboBoxChangeType);
+            //CmboBoxFiller.Fill(new UserTypes(), CmboBoxChangeType);
             CmboBoxFiller.FillSalesBoxes();
             FillLogsBoxes();
 
@@ -79,6 +80,25 @@ namespace SportsStore.View
             RefreshDgrid.Invoke();
             DgridController(Dgrid1);
         }
+        private void DGrid1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is DataGrid dGrid)
+            {
+                StockInfo.Instance.TboxInfo.Text = $"{GetDgridContent(dGrid, 5)}\n" +
+                                $"Id: {GetDgridContent(dGrid, 4)}\n" +
+                                $"Price: {GetDgridContent(dGrid, 8)}\n" +
+                                $"Color: {GetDgridContent(dGrid, 9)}\n" +
+                                $"Size: {GetDgridContent(dGrid, 10)}\n" +
+                                $"In Stock: {GetDgridContent(dGrid, 2)}\n";
+
+                StockInfo.Instance.TboxInfo.Text += $"\n\n{GetDgridContent(dGrid, 5)}\n" +
+                                       $"is a {GetDgridContent(dGrid, 6)} {GetDgridContent(dGrid, 7)} " +
+                                       $"and it costs {GetDgridContent(dGrid, 8)} Shekels.\n" +
+                                       $"we are working with this product\nsince: {GetDgridContent(dGrid, 11)}";
+
+                StockSell.Instance.TboxSellID.Text = GetDgridContent(dGrid, 4);
+            }
+        }
 
         // Customers_Tab Event Handlers
         private void Customers_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -105,10 +125,6 @@ namespace SportsStore.View
         }
 
         // EditStock_Tab Event Handlers
-        private void BoxItemPrice_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Validate.IsStringNaN((TextBox)sender, e);
-        }
         private void EditStock_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             RefreshDgrid.Invoke();
@@ -160,79 +176,8 @@ namespace SportsStore.View
                                               $"by: {GetDgridContent(Dgrid2, 12)} {GetDgridContent(Dgrid2, 13)}, Id: {GetDgridContent(Dgrid2, 11)}";
         }
 
-
         // Users_Tab Event Handlers
         private void Users_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (reader.CheckAuthorizationLevel() != 0)
-            {
-                MessageBox.Show("You are not authorized to do that!");
-                return;
-            }
-            RefreshDataGrid(Dgrid3);
-            DgridController(Dgrid3);
-        }
-        private void BtnChangeUserType_Click(object sender, RoutedEventArgs e)
-        {
-            if (MessageBox.Show($"This will change the user type to {CmboBoxChangeType.Text}.\n " +
-                                 "are you sure)?", "Change User Type",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                writer.ChangeUserType(Convert.ToInt16(GetDgridContent(Dgrid3)), CmboBoxChangeType.Text);
-                RefreshDataGrid(Dgrid3);
-            }
-
-        }
-        private void BtnChangeEmail_Click(object sender, RoutedEventArgs e)
-        {
-            if (MessageBox.Show($"This will change user email to {TboxChangeMail.Text}.\n " +
-                                 "are you sure)?", "Change User Email",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                writer.ChangeUserEmail(Convert.ToInt16(GetDgridContent(Dgrid3)), TboxChangeMail.Text);
-                RefreshDataGrid(Dgrid3);
-            }
-        }
-        private void TboxChangeMail_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Validate.IsEmailValid(TboxChangeMail);
-        }
-        private void BtnChangeHireDate_Click(object sender, RoutedEventArgs e)
-        {
-            if (MessageBox.Show($"This will change user hire date.\n " +
-                                 "are you sure)?", "Change User Hire Date",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                writer.ChangeUserHireDate(Convert.ToInt16(GetDgridContent(Dgrid3)), TboxChangeHireDate.Text);
-            }
-        }
-        private void BtnResetPass_Click(object sender, RoutedEventArgs e)
-        {
-            if (MessageBox.Show($"This will reset user password to '12345'.\n " +
-                                 "are you sure)?", "Change User Password",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                writer.ChangeUserPassword(Convert.ToInt16(GetDgridContent(Dgrid3)), Md5Hash.Create("12345"));
-            }
-        }
-        private void BtnRemoveUser_Click(object sender, RoutedEventArgs e)
-        {
-            if (MessageBox.Show($"This will remove user!.\n " +
-                                 "are you sure)?", "Remove User",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                writer.RemoveUser(Convert.ToInt16(GetDgridContent(Dgrid3)));
-                RefreshDataGrid(Dgrid3);
-            }
-        }
-
-        // Logs_Tab Event Handlers
-        private void Logs_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (reader.CheckAuthorizationLevel() != 0)
             {
@@ -246,15 +191,34 @@ namespace SportsStore.View
         {
             try
             {
-                TboxLogInfo.Text = $"User: {GetDgridContent(Dgrid4, 2)} {GetDgridContent(Dgrid4, 3)}, " +
-                                    $"{reader.GetUserType(Convert.ToInt16(GetDgridContent(Dgrid4, 1)))}\n" +
-                                    $"id: {GetDgridContent(Dgrid4, 1)}\n\n" +
-                                    $"Action Type: {GetDgridContent(Dgrid4, 4)}\n" +
-                                    $"Date: {GetDgridContent(Dgrid4, 5)}\n";
+                if (GetDgridContent(Dgrid4) != "")
+                {
+                    UsersInfo.Instance.TboxInfo.Text =
+                        $"{GetDgridContent(Dgrid4, 1)} {GetDgridContent(Dgrid4, 2)}\n" +
+                        $"id: {GetDgridContent(Dgrid4)}\n" +
+                        $"User Type: {GetDgridContent(Dgrid4, 4)}\n" +
+                        $"Email: {GetDgridContent(Dgrid4, 5)}\n" +
+                        $"Hire Date: {GetDgridContent(Dgrid4, 3)}\n\n" +
+                        $"Last Sale: {GetDgridContent(Dgrid4, 8)}\n" +
+                        $"Sales Total: {GetDgridContent(Dgrid4, 9)}\n" +
+                        $"Sales Count: {GetDgridContent(Dgrid4, 10)}";
+
+                    UsersEdit.Instatnce.BoxUserId.Text = GetDgridContent(Dgrid4);
+                }
             }
             catch
             {
                 RefreshDataGrid(Dgrid4);
+            }
+        }
+
+        // Logs_Tab Event Handlers
+        private void Logs_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (reader.CheckAuthorizationLevel() != 0)
+            {
+                MessageBox.Show("You are not authorized to do that!");
+                return;
             }
         }
         private void BtnLogsGo_Click(object sender, RoutedEventArgs e)
@@ -302,14 +266,13 @@ namespace SportsStore.View
             File.WriteAllLines(saveFileDialog.FileName, list);
         }
 
-        // Exit & Start Event Handlers
+        // OnExit Event Handler
         private void OnExit(object sender, CancelEventArgs e)
         {
             writer.ExitProgram();
         }
 
         // ComboBox Fillers
-
         private void FillLogsBoxes()
         {
             foreach (string str in reader.GetList("ByLogUserId"))
@@ -327,25 +290,6 @@ namespace SportsStore.View
         }
 
         // DataGrids Handlers
-        private void DGrid1SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (sender is DataGrid dGrid)
-            {
-                StockInfo.Instance.TboxInfo.Text = $"{GetDgridContent(dGrid, 5)}\n" +
-                                $"Id: {GetDgridContent(dGrid, 4)}\n" +
-                                $"Price: {GetDgridContent(dGrid, 8)}\n" +
-                                $"Color: {GetDgridContent(dGrid, 9)}\n" +
-                                $"Size: {GetDgridContent(dGrid, 10)}\n" +
-                                $"In Stock: {GetDgridContent(dGrid, 2)}\n";
-
-                StockInfo.Instance.TboxInfo.Text += $"\n\n{GetDgridContent(dGrid, 5)}\n" +
-                                       $"is a {GetDgridContent(dGrid, 6)} {GetDgridContent(dGrid, 7)} " +
-                                       $"and it costs {GetDgridContent(dGrid, 8)} Shekels.\n" +
-                                       $"we are working with this product\nsince: {GetDgridContent(dGrid, 11)}";
-
-                StockSell.Instance.TboxSellID.Text = GetDgridContent(dGrid, 4);
-            }
-        }
         private void DgridController(DataGrid currentGrid)
         {
             foreach (var control in StockTabGrid.Children)
@@ -374,7 +318,7 @@ namespace SportsStore.View
             }
             if (dGrid == Dgrid4)
             {
-                Dgrid4.ItemsSource = reader.GetTable("Logs").ToList();
+                Dgrid4.ItemsSource = reader.GetTable("Users").ToList();
             }
         }
         private string GetDgridContent(DataGrid dGrid, int cell = 0)

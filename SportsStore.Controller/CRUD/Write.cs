@@ -144,24 +144,21 @@ namespace SportsStore.Controller
         }
         public bool AddSale(int itemId, int quantity, int customerID)
         {
-
             if (quantity <= db.Stocks.Single(x => x.Item.Id == itemId).Quantity && LoggedInUser is not null)
             {
-                double price = db.Items.Single(x => x.Id == itemId).Price * quantity;
-                int? salesCount = db.Users.Single(x => x.Id == LoggedInUser.Id).SalesCount;
-                double? salesTotal = db.Users.Single(x => x.Id == LoggedInUser.Id).SalesTotal;
+                Item item = db.Items.Single(x => x.Id == itemId);
+                Customer customer = db.customers.Single(x => x.Id == customerID);
+                double price = item.Price * quantity;
 
                 db.Stocks.Single(x => x.Item.Id == itemId).Quantity -= quantity;
-                db.Users.Single(x => x.Id == LoggedInUser.Id).LastSale = DateTime.Now;
-                Customer customer = db.customers.Single(x => x.Id == customerID);
-                Item item = db.Items.Single(x => x.Id == itemId);
 
-                salesCount = salesCount == null ? 1 : salesCount++;
-                salesTotal = salesTotal == null ? price : salesTotal += price;
-
-                customer.PurchasesCount++;
-                customer.TotalPurchases += salesTotal;
+                customer.PurchasesCount = customer.PurchasesCount is null ? 1 : customer.PurchasesCount += 1;
+                customer.TotalPurchases = customer.TotalPurchases is null ? price : customer.TotalPurchases += price;
                 customer.LastPurchase = DateTime.Now;
+
+                LoggedInUser.SalesCount = LoggedInUser.SalesCount is null ? 1 : LoggedInUser.SalesCount += 1;
+                LoggedInUser.SalesTotal = LoggedInUser.SalesTotal is null ? price : LoggedInUser.SalesTotal += price;
+                LoggedInUser.LastSale = DateTime.Now;
 
                 db.Sales.Add(new()
                 {
@@ -172,23 +169,22 @@ namespace SportsStore.Controller
                     SaleDate = DateTime.Now,
                     User = LoggedInUser
                 });
-                db.SaveChanges();
+
                 db.SaleViews.Add(new()
                 {
                     Quantity = quantity,
                     TotalPrice = price,
                     SaleDate = DateTime.Now,
-                    ThisItemId = db.Items.Single(x => x.Id == itemId).Id,
-                    ItemName = db.Items.Single(x => x.Id == itemId).Name,
-                    ItemType = db.Items.Single(x => x.Id == itemId).ItemType,
-                    ItemInnerType = db.Items.Single(x => x.Id == itemId).ItemInnerType,
-                    ItemPrice = db.Items.Single(x => x.Id == itemId).Price,
-                    ItemColor = db.Items.Single(x => x.Id == itemId).Color,
-                    ItemSize = db.Items.Single(x => x.Id == itemId).Size,
-                    SalsemanId = db.Users.Single(x => x.Id == LoggedInUser.Id).Id,
-                    SalsemanFname = db.Users.Single(x => x.Id == LoggedInUser.Id).FirstName,
-                    SalsemanLname = db.Users.Single(x => x.Id == LoggedInUser.Id).LastName
-
+                    ThisItemId = item.Id,
+                    ItemName = item.Name,
+                    ItemType = item.ItemType,
+                    ItemInnerType = item.ItemInnerType,
+                    ItemPrice = item.Price,
+                    ItemColor = item.Color ?? string.Empty,
+                    ItemSize = item.Size ?? string.Empty,
+                    SalsemanId = LoggedInUser.Id,
+                    SalsemanFname = LoggedInUser.FirstName,
+                    SalsemanLname = LoggedInUser.LastName
                 });
                 db.SaveChanges();
 

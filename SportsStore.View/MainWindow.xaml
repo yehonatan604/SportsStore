@@ -1,4 +1,4 @@
-﻿<Window xmlns:CostumerTabCComponents="clr-namespace:SportsStore.View.Themes.CustomControls.CostumerTabCComponents" 
+﻿<Window xmlns:UsersTabComponents="clr-namespace:SportsStore.View.Themes.CustomControls.UsersTabComponents"  xmlns:CostumerTabCComponents="clr-namespace:SportsStore.View.Themes.CustomControls.CostumerTabCComponents" 
         xmlns:SalesTabComponents="clr-namespace:SportsStore.View.Themes.CustomControls.SalesTabComponents"  
         xmlns:EditStockTabComponents="clr-namespace:SportsStore.View.Themes.CustomControls.EditStockTabComponents" 
         xmlns:CustomControls="clr-namespace:SportsStore.View.Themes.CustomControls"  
@@ -103,7 +103,7 @@
                     </Border>
 
                     <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="4" Grid.ColumnSpan="4" Style="{StaticResource HeadLines1}" Background="White">
-                        <DataGrid x:Name="Dgrid1" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,0" Grid.Row="4" SelectionChanged="DGrid1SelectionChanged"/>
+                        <DataGrid x:Name="Dgrid1" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,0" Grid.Row="4" SelectionChanged="DGrid1_SelectionChanged"/>
                     </Border>
                 </Grid>
             </TabItem>
@@ -265,47 +265,44 @@
                         <TextBlock Text="Users" FontSize="30" Style="{StaticResource TabsTblockStyle}" MouseEnter="TabHdrStock_MouseEnter" MouseLeave="TabHdrStock_MouseLeave" />
                     </WrapPanel>
                 </TabItem.Header>
-                <Grid>
-
+                <Grid x:Name="UsersTabGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.3*" />
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="0.3*" />
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="4.5*" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="4*" />
-                        <RowDefinition Height="4*" />
-                    </Grid.RowDefinitions>
-                    <DataGrid x:Name="Dgrid55" Grid.ColumnSpan="6" SelectionChanged="Dgrid3_SelectionChanged" Background="Transparent" Margin="0,10,0,0" Grid.Row="3"/>
-                    <TextBlock x:Name="LblUserId" Text="User Id: " Margin="5,5,20,0" HorizontalAlignment="Center" FontSize="28"/>
 
-                    <WrapPanel Orientation="Horizontal" Grid.Row="1">
-                        <WrapPanel x:Name="SaleViewgfbjsTxts" Orientation="Vertical" >
-                            <TextBlock Text="Change User Type" Margin="10,9,0,0" />
-                            <TextBlock Text="Change User Email" Margin="10,12,0,0"/>
-                            <TextBlock Text="Change Hire Date" Margin="10,13,0,0"/>
-                            <TextBlock Text="Reset Password" Margin="10,23,0,0"/>
-                            <TextBlock Text="Remove User" Margin="10,23,0,0"/>
-                        </WrapPanel>
-                        <WrapPanel x:Name="SalestyutxtBoxes" Orientation="Vertical" Margin="10,0,0,0">
-                            <ComboBox x:Name="CmboBoxChangeType" Margin="0,4,0,0" />
-                            <TextBox x:Name="TboxChangeMail" Margin="0,7,0,0" LostFocus="TboxChangeMail_LostFocus"/>
-                            <TextBox x:Name="TboxChangeHireDate" Margin="0,7,0,0" />
-                            <Button x:Name="BtnResetPass" Content="Go" Margin="0,23,0,0" Style="{StaticResource BtnSellStyle}" Width="70" Click="BtnResetPass_Click"/>
-                            <Button x:Name="BtnRemoveUser" Content="Go" Margin="0,16,0,0" Style="{StaticResource BtnSellStyle}" Width="70" Click="BtnRemoveUser_Click"/>
-                        </WrapPanel>
-                        <WrapPanel x:Name="SalefdgstyutxtBoxes" Orientation="Vertical" Margin="15,0,0,0">
-                            <Button x:Name="BtnChangeUserType" Content="Go" Margin="0,7,0,0" Style="{StaticResource BtnSellStyle}" Width="70" Click="BtnChangeUserType_Click"/>
-                            <Button x:Name="BtnChangeEmail" Content="Go" Margin="0,8,0,0" Style="{StaticResource BtnSellStyle}" Width="70" Click="BtnChangeEmail_Click"/>
-                            <Button x:Name="BtnChangeHireDate" Content="Go" Margin="0,4,0,0" Style="{StaticResource BtnSellStyle}" Width="70" Click="BtnChangeHireDate_Click"/>
-                        </WrapPanel>
-                    </WrapPanel>
+                    <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="1,1,0,1" Style="{StaticResource HeadLines1}">
+                        <TextBlock Text="Views" FontFamily="Gill Sans MT" FontWeight="Light" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28"/>
+                    </Border>
+                    <Border BorderBrush="Gray" BorderThickness="1,0,0,1" Grid.Row="1" Grid.RowSpan="3">
+                        <UsersTabComponents:UsersView Grid.Row="1" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+                    </Border>
 
-                    <TextBlock Text="User Info" Margin="5,5,20,0" HorizontalAlignment="Center" 
-                               FontSize="28" Grid.Column="1" Grid.ColumnSpan="2"/>
-                    <TextBox Grid.Row="1" Name="TboxUserInfo" Grid.Column="1" Width="460" Height="137" VerticalAlignment="Top" 
-                             HorizontalAlignment="Center" BorderThickness="0" Grid.ColumnSpan="2"/>
+                    <Border BorderBrush="Gray" BorderThickness="1,1,1,1" Grid.Column="1" Style="{StaticResource HeadLines2}" >
+                        <TextBlock Text="Info" FontFamily="Gill Sans MT" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="28" Grid.Column="2" />
+                    </Border>
+                    <Border BorderBrush="Gray" BorderThickness="1,0,1,1" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3">
+                        <UsersTabComponents:UsersInfo />
+                    </Border>
+
+                    <Border BorderBrush="Gray" BorderThickness="0,1,1,1" Grid.Column="2" Style="{StaticResource HeadLines1}" >
+                        <TextBlock Text="Edit User" FontFamily="Gill Sans MT" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="28" />
+                    </Border>
+                    <Border BorderBrush="Gray" BorderThickness="0,0,1,1" Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" >
+                        <UsersTabComponents:UsersEdit/>
+                    </Border>
+
+                    <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="4" Grid.ColumnSpan="4" Style="{StaticResource HeadLines1}" Background="White">
+                        <DataGrid x:Name="Dgrid4" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,0" Grid.Row="4" SelectionChanged="Dgrid4_SelectionChanged"/>
+                    </Border>
                 </Grid>
 
             </TabItem>
@@ -332,7 +329,6 @@
                         <RowDefinition Height="4*" />
                         <RowDefinition Height="4*" />
                     </Grid.RowDefinitions>
-                    <DataGrid x:Name="Dgrid4" Grid.ColumnSpan="6" SelectionChanged="Dgrid4_SelectionChanged" Background="Transparent" Margin="0,10,0,0" Grid.Row="3"/>
                     <TextBlock Text="Views" Margin="49,5,0,0" HorizontalAlignment="Left" FontSize="28" Grid.Column="3"/>
 
                     <WrapPanel Orientation="Horizontal" Grid.ColumnSpan="4" Margin="0,51,0,0" Grid.RowSpan="2">

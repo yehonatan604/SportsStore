@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="SportsStore.View.Themes.CustomControls.UsersTabComponents.UsersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SportsStore.View.Themes.CustomControls.UsersTabComponents"
+             mc:Ignorable="d" 
+             Height="390" Width="700">
+    <Grid HorizontalAlignment="Center">
+        <Grid >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <WrapPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Center">
+                <Grid Margin="5,0,0,0" Width="395">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource TblockComponenta}" Text="By User Type:" />
+                    <ComboBox x:Name="BoxByUserType" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource CmboBoxComponentaStyle}" />
+                </Grid>
+                <Grid Margin="5,10,0,0" Width="395">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource TblockComponenta}" Text="By Sale Date:" />
+                    <ComboBox x:Name="BoxBySaleDate" Style="{StaticResource CmboBoxComponentaStyle}" Margin="25,6,20,0" Grid.Column="1" />
+                </Grid>
+                <Grid Margin="5,10,0,0" Width="395">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource TblockComponenta}" Text="By Hire Year:" />
+                    <ComboBox x:Name="BoxByHireYear" Style="{StaticResource CmboBoxComponentaStyle}" Margin="25,6,20,0" Grid.Column="1" />
+                </Grid>
+            </WrapPanel>
+            <WrapPanel Grid.Row="1" VerticalAlignment="Center">
+                <Grid Margin="5,0,0,0" Width="395">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="BtnSearch" Content="Go" Width="65"  Grid.Column="0" Margin="-45,0,0,0" HorizontalAlignment="Center" Click="BtnSearch_Click"/>
+                    <Button x:Name="BtnRefresh" Content="Refresh" Width="65"  Grid.Column="1" Margin="45,0,0,0" HorizontalAlignment="Left" Click="BtnRefresh_Click"/>
+                </Grid>
+            </WrapPanel>
+            <WrapPanel Orientation="Vertical" Grid.Row="2" VerticalAlignment="Center">
+                <Grid Margin="5,0,0,0" Width="395">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource TblockComponenta}" Text="Search By Id:" />
+                    <TextBox x:Name="BoxById" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" KeyUp="BoxById_KeyUp" />
+                </Grid>
+                <Grid Margin="5,10,0,0" Width="395">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource TblockComponenta}" Text="Search By Name:" />
+                    <TextBox x:Name="BoxByName" Width="100" Margin="25,6,20,0" Grid.Column="1" Style="{StaticResource TboxComponenta2}" HorizontalAlignment="Left" KeyUp="BoxSearch_KeyUp" ToolTip="By first name or last name"/>
+                </Grid>
+            </WrapPanel>
+        </Grid>
+    </Grid>
+</UserControl>
