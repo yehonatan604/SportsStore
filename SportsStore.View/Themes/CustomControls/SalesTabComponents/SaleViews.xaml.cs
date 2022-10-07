@@ -1,35 +1,20 @@
-﻿using SportsStore.Controller;
-using SportsStore.Enums;
-using SportsStore.View.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Linq;
+using SportsStore.Controller;
+using SportsStore.Enums;
+using SportsStore.Utilities;
 
 namespace SportsStore.View.Themes.CustomControls.SalesTabComponents
 {
-    /// <summary>
-    /// Interaction logic for SaleViews.xaml
-    /// </summary>
     public partial class SaleViews : UserControl
     {
-        Read reader;
-        public static SaleViews Instance;
+        private readonly Read read = MainWindow.Current.read;
+        public static SaleViews? Current { get; private set; }
         public SaleViews()
         {
             InitializeComponent();
-            Instance = this;
-            reader = new();
+            Current = this;
         }
         private void TboxMin_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -42,7 +27,7 @@ namespace SportsStore.View.Themes.CustomControls.SalesTabComponents
 
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
-            DataGrid dGrid = MainWindow.Instance.Dgrid2;
+            DataGrid dGrid = MainWindow.Current.Dgrid2;
 
             // check what is the search requirements
             bool byItemId = !string.IsNullOrEmpty(BoxById.Text);
@@ -57,32 +42,32 @@ namespace SportsStore.View.Themes.CustomControls.SalesTabComponents
             string minPrice = TboxMin.Text == "Min" || TboxMin.Text == string.Empty ? "0" : TboxMin.Text;
             string maxPrice = TboxMax.Text == "Max" || TboxMax.Text == string.Empty ? 999999.ToString() : TboxMax.Text;
 
-            dGrid.ItemsSource = bySalesman ? reader.GetSales
+            dGrid.ItemsSource = bySalesman ? read.GetSales
                                 ("BySalseMan", CmbBoxBySalesman.Text, minPrice, maxPrice).ToList() :
-                                byItemId ? reader.GetSales
+                                byItemId ? read.GetSales
                                 ("ByItemId", BoxById.Text, minPrice, maxPrice).ToList() :
-                                byDate ? reader.GetSales
+                                byDate ? read.GetSales
                                 ("ByDate", CmbBoxByDate.Text, minPrice, maxPrice).ToList() :
-                                byType ? reader.GetSales
+                                byType ? read.GetSales
                                 ("ByType", CmbBoxByItemType.Text, minPrice, maxPrice).ToList() :
-                                byType && byInnerType ? reader.GetSales
+                                byType && byInnerType ? read.GetSales
                                 ("ByTypeInnerType", CmbBoxByItemType.Text, CmbBoxByInnerType.Text, minPrice, maxPrice).ToList() :
-                                byType && byInnerType && byDate ? reader.GetSales
+                                byType && byInnerType && byDate ? read.GetSales
                                 ("ByTypeInnerTypeDate", CmbBoxByItemType.Text, CmbBoxByInnerType.Text, CmbBoxByDate.Text, minPrice, maxPrice).ToList() :
-                                byType && byInnerType && bySalesman ? reader.GetSales
+                                byType && byInnerType && bySalesman ? read.GetSales
                                 ("ByTypeInnerTypeSalesman", CmbBoxByItemType.Text, CmbBoxByInnerType.Text, CmbBoxBySalesman.Text, minPrice, maxPrice).ToList() :
-                                byType && byInnerType && byColor ? reader.GetSales
+                                byType && byInnerType && byColor ? read.GetSales
                                 ("ByTypeInnerTypeColor", CmbBoxByItemType.Text, CmbBoxByInnerType.Text, CmbBoxByColor.Text, minPrice, maxPrice).ToList() :
-                                byType && byInnerType && bySize ? reader.GetSales
+                                byType && byInnerType && bySize ? read.GetSales
                                 ("ByTypeInnerTypeSize", CmbBoxByItemType.Text, CmbBoxByInnerType.Text, CmbBoxBySize.Text, minPrice, maxPrice).ToList() :
-                                byType && byInnerType && bySize && bySize ? reader.GetSales
+                                byType && byInnerType && bySize && bySize ? read.GetSales
                                 ("ByTypeInnerTypeColorSize", CmbBoxByItemType.Text, CmbBoxByInnerType.Text, CmbBoxByColor.Text, CmbBoxBySize.Text, minPrice, maxPrice).ToList() :
-                                byType && byInnerType && bySize && bySize && bySalesman ? reader.GetSales
+                                byType && byInnerType && bySize && bySize && bySalesman ? read.GetSales
                                 ("ByTypeInnerTypeColorSizeSalesman", CmbBoxByItemType.Text, CmbBoxByInnerType.Text, CmbBoxByColor.Text, CmbBoxBySize.Text, CmbBoxBySalesman.Text, minPrice, maxPrice).ToList() :
-                                byType && byInnerType && bySize && bySize && byDate ? reader.GetSales
+                                byType && byInnerType && bySize && bySize && byDate ? read.GetSales
                                 ("ByTypeInnerTypeColorSizeSalesman", CmbBoxByItemType.Text, CmbBoxByInnerType.Text, CmbBoxByColor.Text, CmbBoxBySize.Text, CmbBoxByDate.Text, minPrice, maxPrice).ToList() :
                                 // else by price only:
-                                reader.GetSales(minPrice, maxPrice).ToList();
+                                read.GetSales(minPrice, maxPrice).ToList();
         }
 
         private void CmbBoxByItemType_SelectionChanged(object sender, SelectionChangedEventArgs e)

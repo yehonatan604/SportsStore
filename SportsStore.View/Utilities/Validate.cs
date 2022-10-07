@@ -11,7 +11,7 @@ using System.Reflection.PortableExecutable;
 using SportsStore.Enums;
 using SportsStore.Controller;
 
-namespace SportsStore.View.Utilities
+namespace SportsStore.Utilities
 {
     public static class Validate
     {

@@ -1,6 +1,5 @@
 ﻿using SportsStore.Controller;
 using SportsStore.Enums;
-using SportsStore.View.Utilities;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

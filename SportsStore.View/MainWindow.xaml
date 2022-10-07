@@ -47,7 +47,6 @@
         </DockPanel>
 
         <TabControl TabStripPlacement="Left" BorderThickness="0" Grid.ColumnSpan="2" Margin="0,34,0,0" Grid.RowSpan="2" >
-
             <TabItem x:Name="Stock_Tab" MouseLeftButtonUp="Stocks_Tabs_MouseLeftButtonUp">
                 <TabItem.Header>
                     <WrapPanel Width="240">
@@ -259,6 +258,7 @@
                     </Border>
                 </Grid>
             </TabItem>
+            
             <TabItem x:Name="Users_Tab" MouseLeftButtonUp="Users_Tab_MouseLeftButtonUp">
                 <TabItem.Header>
                     <WrapPanel Width="240">
@@ -366,8 +366,8 @@
                     </WrapPanel>
                 </TabItem.Header>
             </TabItem>
-
         </TabControl>
+        
     </Grid>
 
 </Window>

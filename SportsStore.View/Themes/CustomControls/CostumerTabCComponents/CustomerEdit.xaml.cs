@@ -1,39 +1,21 @@
-﻿using SportsStore.Controller;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using SportsStore.Controller;
+using SportsStore.Utilities;
 
 namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
 {
-    /// <summary>
-    /// Interaction logic for CustomerEdit.xaml
-    /// </summary>
     public partial class CustomerEdit : UserControl
     {
-        public static CustomerEdit? Instance { get; set; }
-        public Create writer;
-        public Read reader;
-        public Update update;
+        public static CustomerEdit? Current { get; private set; }
+        private readonly Read read = MainWindow.Current.read;
+        private readonly Update update = MainWindow.Current.update;
         public CustomerEdit()
         {
             InitializeComponent();
             FillCustomersBox();
-
-            writer = new();
-            reader = new();
-            update = new();
-            Instance = this;
+            Current = this;
         }
 
         private void BtnChange_Click(object sender, RoutedEventArgs e)
@@ -76,7 +58,7 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
             }
             finally
             {
-                MainWindow.Instance.RefreshDgrid.Invoke(MainWindow.Instance.Dgrid3);
+                DGridController.RefreshDgrid(MainWindow.Current.Dgrid3);
             }
         }
 
@@ -92,10 +74,10 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
         {
             if (BoxCustomerId.SelectedItem is string s)
             {
-                BoxFirstName.Text = reader.GetList("CustomerDetails", s)[0];
-                BoxLastName.Text = reader.GetList("CustomerDetails", s)[1];
-                BoxEmail.Text = reader.GetList("CustomerDetails", s)[2];
-                BoxDateOfBirth.Text = reader.GetList("CustomerDetails", s)[3];
+                BoxFirstName.Text = read.GetList("CustomerDetails", s)[0];
+                BoxLastName.Text = read.GetList("CustomerDetails", s)[1];
+                BoxEmail.Text = read.GetList("CustomerDetails", s)[2];
+                BoxDateOfBirth.Text = read.GetList("CustomerDetails", s)[3];
             }
         }
     }

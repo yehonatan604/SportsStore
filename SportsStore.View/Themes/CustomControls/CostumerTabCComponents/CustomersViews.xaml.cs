@@ -1,33 +1,18 @@
 ﻿using SportsStore.Controller;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
 {
-    /// <summary>
-    /// Interaction logic for CustomersViews.xaml
-    /// </summary>
     public partial class CustomersViews : UserControl
     {
-        private readonly Read reader;
+        private readonly Read read = MainWindow.Current.read;
         public CustomersViews()
         {
             InitializeComponent();
-            reader = new();
-            reader.GetList("ByDate").ForEach(x => CmbBoxByDate.Items.Add(x));
+            read.GetList("ByDate").ForEach(x => CmbBoxByDate.Items.Add(x));
         }
 
         private void Tbox_GotFocus(object sender, RoutedEventArgs e)
@@ -48,7 +33,7 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
         }
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
-            DataGrid dGrid = MainWindow.Instance.Dgrid3;
+            DataGrid dGrid = MainWindow.Current.Dgrid3;
 
             // check what is the search requirements
             bool byId = !string.IsNullOrEmpty(BoxById.Text);
@@ -62,20 +47,20 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
             string minSalesCount = TboxCountMin.Text == "Min" || TboxCountMin.Text == string.Empty ? "0" : TboxCountMin.Text;
             string maxSalesCount = TboxCountMax.Text == "Max" || TboxCountMax.Text == string.Empty ? 999999.ToString() : TboxCountMax.Text;
 
-            dGrid.ItemsSource = byId ? reader.GetCustomers
+            dGrid.ItemsSource = byId ? read.GetCustomers
                                 ("ById", minAge, maxAge, minPrice, maxPrice, minSalesCount, maxSalesCount, BoxById.Text).ToList() :
-                                byDate ? reader.GetCustomers
+                                byDate ? read.GetCustomers
                                 ("ByDate", minAge, maxAge, minPrice, maxPrice, minSalesCount, maxSalesCount, CmbBoxByDate.Text).ToList() :
-                                byId && byDate ? reader.GetCustomers
+                                byId && byDate ? read.GetCustomers
                                 ("ByDate", minAge, maxAge, minPrice, maxPrice, minSalesCount, maxSalesCount, BoxById.Text, CmbBoxByDate.Text).ToList() :
                                 // else:
-                                reader.GetCustomers
+                                read.GetCustomers
                                 (minAge, maxAge, minPrice, maxPrice, minSalesCount, maxSalesCount).ToList();
         }
 
         private void BoxSearch_KeyUp(object sender, KeyEventArgs e)
         {
-            MainWindow.Instance.Dgrid3.ItemsSource = reader.CustomerSearch(BoxSearch.Text).ToList();
+            MainWindow.Current.Dgrid3.ItemsSource = read.CustomerSearch(BoxSearch.Text).ToList();
         }
     }
 }

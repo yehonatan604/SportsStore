@@ -17,7 +17,6 @@
                              HorizontalAlignment="Center" BorderThickness="0" IsReadOnly="True" Margin="0,5,0,0"/>
         </Border>
         <WrapPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Button x:Name="BtnSaveReport" Content="Save Report" Margin="20,0" Click="BtnSaveReport_Click"/>
             <Button x:Name="BtnClearLogs" Content="Clear Logs" Margin="20,0" Click="BtnClearLogs_Click"/>
             <Button x:Name="BtnRefreshView" Content="Refresh" Margin="20,0" Click="BtnRefreshView_Click"/>
         </WrapPanel>

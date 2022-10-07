@@ -1,36 +1,31 @@
-﻿using SportsStore.Controller;
-using SportsStore.Enums;
-using SportsStore.View.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Linq;
+using SportsStore.Controller;
+using SportsStore.Enums;
+using SportsStore.Utilities;
 
 namespace SportsStore.View.Themes.CustomControls
 {
-    /// <summary>
-    /// Interaction logic for StockViews.xaml
-    /// </summary>
     public partial class StockViews : UserControl
     {
-        private readonly Read reader = new();
-        public static StockViews Instance;
+        private readonly Read read = MainWindow.Current.read;
+        public static StockViews? Current { get; private set; }
         public StockViews()
         {
             InitializeComponent();
-            Instance = this;
+            Current = this;
         }
 
         private void TboxSearch_GotFocus(object sender, RoutedEventArgs e)
         {
             TboxSearch.Text = string.Empty;
-            StockInfo.Instance.TboxInfo.Text = string.Empty;
+            StockInfo.Current.TboxInfo.Text = string.Empty;
         }
         private void TboxSearch_OnKeyUp(object sender, KeyEventArgs e)
         {
-            MainWindow.Instance.Dgrid1.ItemsSource = reader.ItemSearch(TboxSearch.Text).ToList();
+            MainWindow.Current.Dgrid1.ItemsSource = read.ItemSearch(TboxSearch.Text).ToList();
 
         }
         private void CmbBoxViewByInnerItemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -111,14 +106,14 @@ namespace SportsStore.View.Themes.CustomControls
             
             if (byType)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetStock("ViewsByItemPrice",
+                MainWindow.Current.Dgrid1.ItemsSource = read.GetStock("ViewsByItemPrice",
                                                      CmbBoxViewByItemType.Text,
                                                      minPrice,
                                                      maxPrice).ToList();
             }
             if (byType && byInnerType)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetStock("ViewsByInnerItemPrice",
+                MainWindow.Current.Dgrid1.ItemsSource = read.GetStock("ViewsByInnerItemPrice",
                                                      CmbBoxViewByItemType.Text,
                                                      CmbBoxViewByInnerType.Text,
                                                      minPrice,
@@ -127,21 +122,21 @@ namespace SportsStore.View.Themes.CustomControls
             
             if (byType && byInnerType && byColor)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetStock("ViewsByColor",
+                MainWindow.Current.Dgrid1.ItemsSource = read.GetStock("ViewsByColor",
                                                      CmbBoxViewByItemType.Text,
                                                      CmbBoxViewByInnerType.Text,
                                                      CmbBoxViewByColor.Text).ToList();
             }
             if (byType && byInnerType && bySize)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetStock("ViewsBySize",
+                MainWindow.Current.Dgrid1.ItemsSource = read.GetStock("ViewsBySize",
                                                      CmbBoxViewByItemType.Text,
                                                      CmbBoxViewByInnerType.Text,
                                                      CmbBoxViewBySize.Text).ToList();
             }
             if (byType && byInnerType && byColor && bySize)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetStock("ViewsByAll",
+                MainWindow.Current.Dgrid1.ItemsSource = read.GetStock("ViewsByAll",
                                                      CmbBoxViewByItemType.Text,
                                                      CmbBoxViewByInnerType.Text,
                                                      CmbBoxViewByColor.Text,
@@ -153,7 +148,7 @@ namespace SportsStore.View.Themes.CustomControls
         }
         private void BtnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable().ToList();
+            MainWindow.Current.Dgrid1.ItemsSource = read.GetTable().ToList();
         }
     }
 }

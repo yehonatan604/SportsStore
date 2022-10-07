@@ -1,31 +1,18 @@
-﻿using SportsStore.Controller;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using SportsStore.Controller;
+using SportsStore.Utilities;
 
 namespace SportsStore.View.Themes.CustomControls.EditStockTabComponents
 {
     public partial class EditStockEditItem : UserControl
     {
-        Create writer;
-        public static EditStockEditItem Instance;
+        public static EditStockEditItem? Current { get; private set; }
         public EditStockEditItem()
         {
             InitializeComponent();
-            Instance = this;
-            writer = new();
+            Current = this;
         }
 
         private void BtnEditItem_Click(object sender, RoutedEventArgs e)
@@ -37,18 +24,18 @@ namespace SportsStore.View.Themes.CustomControls.EditStockTabComponents
                                                  BoxItemInnerType.Text, BoxColor.Text, BoxSize.Text) ?
                                                  "Stock Details Was Changed Successfuly" : 
                                                  "Operation Failed");
-                MainWindow.Instance.RefreshDgrid.Invoke();
+                DGridController.RefreshDgrid();
             }
         }
 
         private void BoxItemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            EditStockAddItem.Instance.GlobalBoxItemType_SelectionChanged(sender);
+            EditStockAddItem.Current.GlobalBoxItemType_SelectionChanged(sender);
         }
 
         private void BoxItemInnerType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            EditStockAddItem.Instance.GlobalBoxItemInnerType_SelectionChanged(sender);
+            EditStockAddItem.Current.GlobalBoxItemInnerType_SelectionChanged(sender);
         }
     }
 }

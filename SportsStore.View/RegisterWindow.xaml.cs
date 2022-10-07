@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using SportsStore.Controller;
-using SportsStore.View.Utilities;
+using SportsStore.Utilities;
 using SportsStore.Enums;
 
 namespace SportsStore.View

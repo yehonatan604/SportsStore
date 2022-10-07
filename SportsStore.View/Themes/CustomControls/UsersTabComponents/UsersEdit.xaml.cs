@@ -3,29 +3,24 @@ using System.Windows;
 using System.Windows.Controls;
 using SportsStore.Controller;
 using SportsStore.Enums;
-using SportsStore.View.Utilities;
+using SportsStore.Utilities;
 
 namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
 {
     public partial class UsersEdit : UserControl
     {
-        private readonly Create writer;
-        private readonly Read reader;
-        private readonly Delete deleter;
-        private readonly Update update;
+        private readonly Read read = MainWindow.Current.read;
+        private readonly Delete delete = MainWindow.Current.delete;
+        private readonly Update update = MainWindow.Current.update;
 
-        public static UsersEdit Instatnce;
+        public static UsersEdit? Current { get; private set; }
         public UsersEdit()
         {
             InitializeComponent();
-            writer = new();
-            reader = new();
-            deleter = new();
-            update = new();
-            Instatnce = this;
+            Current = this;
 
             // Fill BoxUserId
-            foreach (string date in reader.GetList("Users"))
+            foreach (string date in read.GetList("Users"))
             {
                 BoxUserId.Items.Add(date);
             }
@@ -68,8 +63,8 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                deleter.RemoveUser(Convert.ToInt16(BoxUserId.Text));
-                MainWindow.Instance.RefreshDgrid(MainWindow.Instance.Dgrid4);
+                delete.RemoveUser(Convert.ToInt16(BoxUserId.Text));
+                DGridController.RefreshDgrid(MainWindow.Current.Dgrid4);
             }
         }
         private void BtnFreeze_Click(object sender, RoutedEventArgs e)
@@ -86,7 +81,7 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
                     MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 update.UserType(Convert.ToInt16(BoxUserId.Text), userType);
-                MainWindow.Instance.RefreshDgrid(MainWindow.Instance.Dgrid4);
+                DGridController.RefreshDgrid(MainWindow.Current.Dgrid4);
             }
 
         }
@@ -98,7 +93,7 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
                     MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 update.UserEmail(Convert.ToInt16(BoxUserId.Text), BoxUserEmail.Text);
-                MainWindow.Instance.RefreshDgrid(MainWindow.Instance.Dgrid4);
+                DGridController.RefreshDgrid(MainWindow.Current.Dgrid4);
             }
         }
         private void ChangeHireDate()
