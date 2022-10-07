@@ -23,27 +23,16 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
     /// </summary>
     public partial class UsersView : UserControl
     {
-        Read reader;
+        private readonly Read reader;
+        public static UsersView Instance;
         public UsersView()
         {
             reader = new();
+            Instance = this;
             InitializeComponent();
-            FillBoxes();
         }
 
-        private void FillBoxes()
-        {
-            CmboBoxFiller.Fill(new UserTypes(), BoxByUserType);
-
-            foreach (string date in reader.GetList("ByDate"))
-            {
-                BoxBySaleDate.Items.Add(date);
-            } 
-            foreach (string date in reader.GetList("ByHireDate"))
-            {
-                BoxByHireYear.Items.Add(date);
-            }
-        }
+        
         private void BtnSearch_Click(object sender, RoutedEventArgs e)
         {
             DataGrid dGrid = MainWindow.Instance.Dgrid4;

@@ -25,7 +25,7 @@ namespace SportsStore.View.Themes.CustomControls
     /// </summary>
     public partial class StockRefund : UserControl
     {
-        private readonly Write writer;
+        private readonly Create writer;
         private readonly Read reader;
         public StockRefund()
         {

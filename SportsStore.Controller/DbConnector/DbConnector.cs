@@ -1,11 +1,9 @@
-﻿using SportsStore.Model;
+﻿using SportsStore.Controller;
+using SportsStore.Model;
 
 namespace SportStore.Controller.DbConnector
 {
-    public interface IDbConnectable
-    {
-        // Mark Interface
-    }
+    
     
     // A Singleton Db Connector
     public class DbConnector 

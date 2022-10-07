@@ -8,7 +8,7 @@ namespace SportsStore.View
 {
     public partial class RegisterWindow : Window
     {
-        private readonly Write writer;
+        private readonly Create writer;
         public RegisterWindow()
         {
             InitializeComponent();

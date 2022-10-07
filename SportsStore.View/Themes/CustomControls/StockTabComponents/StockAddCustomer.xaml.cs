@@ -22,7 +22,7 @@ namespace SportsStore.View.Themes.CustomControls
     /// </summary>
     public partial class StockAddCustomer : UserControl
     {
-        Write writer = new();
+        Create writer = new();
         public StockAddCustomer()
         {
             InitializeComponent();

@@ -8,94 +8,24 @@ using SportStore.Controller.DbConnector;
 
 namespace SportsStore.Controller
 {
-    public class Write :IDbConnectable
-    {
+    public class Create : DbCrud, IDbCreatable
+    { 
         // Db Connector Access
-        private readonly StoreContext db;
-
-        // Properties
-        public static User? LoggedInUser { get; set; }
-        private static string LoggedUserEmail { get; set; } = string.Empty;
-        public static bool IsRememberMe { get; set; } = false;
-        public int NoUserId { get; set; }
-
+        private readonly StoreContext? db;
+        
         // Constructor
-        public Write()
+        public Create() : base()
         {
-            db = DbConnector.GetInstance(this).Db;
-            if (!(db.Users).Any())
+            db = IDbConnectable.Db;
+            if (!db.Users.Any())
             {
                 db.Users.Add(new User("NO_USER", "NO_USER", (UserTypes)500, "NO_USER", "1"));
                 db.Users.Add(new User("Admin", "Admin", (UserTypes)0, "Admin", "Admin1234"));
                 db.SaveChanges();
             }
-            NoUserId = db.Users.Single(x => x.UserType == UserTypes.No_User).Id;
-        }
-
-        // Public Static Method for Changing Current Logged-In User Email
-        public static void ChangeLoggedUserEmail(string email)
-        {
-            LoggedUserEmail = email;
-        }
-
-        // Public Methods for editing selected user details
-        public void ChangeUserType(int id, string type)
-        {
-            db.Users.Single(user => user.Id == id).UserType = (UserTypes)Enum.Parse(typeof(UserTypes), type);
-            db.SaveChanges();
-        }
-        public void ChangeUserEmail(int id, string email)
-        {
-            db.Users.Single(user => user.Id == id).Email = email;
-            db.SaveChanges();
-        }
-        public void ChangeUserHireDate(int id, string date)
-        {
-            db.Users.Single(user => user.Id == id).HireDate = Convert.ToDateTime(date).Date;
-            db.SaveChanges();
-        }
-        public void ChangeUserPassword(int id, string password)
-        {
-            db.Users.Single(user => user.Id == id).Password = password;
-            db.SaveChanges();
-        }
-        public void RemoveUser(int id)
-        {
-            db.Users.Remove(db.Users.Single(user => user.Id == id));
-            db.SaveChanges();
-        }
-
-        // Public Methods for editing selected customer details
-
-        public void ChangeCustomerFirstName(int id, string fName)
-        {
-            db.customers.Single(customer => customer.Id == id).FirstName = fName;
-            db.SaveChanges();
-        }
-        public void ChangeCustomerLastName(int id, string lName)
-        {
-            db.customers.Single(customer => customer.Id == id).LastName = lName;
-            db.SaveChanges();
-        }
-        public void ChangeCustomerEmail(int id, string email)
-        {
-            db.customers.Single(customer => customer.Id == id).Email = email;
-            db.SaveChanges();
-        }
-        public void ChangeCustomerDOB(int id, string dob)
-        {
-            db.customers.Single(customer => customer.Id == id).DateOfBirth = Convert.ToDateTime(dob);
-            db.SaveChanges();
         }
 
         // Add to log Methods
-        public void AddLoggedIn(int id)
-        {
-            db.LoggedIns.Add(new() { DateTime = DateTime.Now, User = db.Users.Single(x => x.Id == id) });
-            db.SaveChanges();
-            LoggedUserEmail = db.Users.Single(x => x.Id == id).Email;
-            AddLog(id, $"id: {id} email:{LoggedUserEmail} logged in", ActionTypes.Login);
-        }
         public void AddLog(int id, string description, ActionTypes actionType)
         {
             db.Logs.Add(new()
@@ -259,50 +189,9 @@ namespace SportsStore.Controller
             db.SaveChanges();
             return true;
         }
-        public bool EditStock(int itemId, string name = "", string price = "", string quantity = "",
-                              string itemType = "", string innerItemType = "", string color = "", string size = "")
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(name))
-                {
-                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].Name = name;
-                }
-                if (!string.IsNullOrEmpty(price))
-                {
-                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].Price = Convert.ToInt16(price);
-                }
-                if (!string.IsNullOrEmpty(quantity))
-                {
-                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x).ToList()[0].Quantity = Convert.ToInt16(quantity);
-                }
-                if (!string.IsNullOrEmpty(itemType))
-                {
-                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].ItemType = itemType;
-                }
-                if (!string.IsNullOrEmpty(innerItemType))
-                {
-                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].ItemInnerType = innerItemType;
-                }
-                if (!string.IsNullOrEmpty(color))
-                {
-                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].Color = color;
-                }
-                if (!string.IsNullOrEmpty(size))
-                {
-                    db.Stocks.Where(x => x.Item.Id == Convert.ToInt16(itemId)).Select(x => x.Item).ToList()[0].Size = size;
-                }
-                db.SaveChanges();
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
 
-        // Strart/End Handlers
-        public void ExitProgram() // Called when Window Closes
+        // Strart/End Program Handlers
+        public void OnExitProgram() // should be called when Window Closes
         {
             int userId = LoggedInUser != null ? LoggedInUser.Id : NoUserId;
 
@@ -310,14 +199,14 @@ namespace SportsStore.Controller
             {
                 if (!LoggedInUser.RememberMe)
                 {
-                    db.LoggedIns.Clear(db);
+                    new Delete().ClearLoggedIns();
                     AddLog(LoggedInUser.Id, $"{LoggedInUser.Id} logged off", ActionTypes.Logoff);
                 }
             }
 
             AddLog(userId, $"id:{userId} exit program", ActionTypes.Exit);
         }
-        public void OnStartProgram() // Called when Window Start
+        public void OnStartProgram() // should be called when Window Start
         {
             Read reader = new();
             int userId = NoUserId;
@@ -330,7 +219,7 @@ namespace SportsStore.Controller
             // if no user logged in, system exit to desktop:
             if (LoggedInUser == null && LoggedUserEmail == string.Empty)
             {
-                ExitProgram();
+                OnExitProgram();
             }
 
             // if LoggedIns entity is empty, we get the id by the LoggedUserEmail:
@@ -345,6 +234,7 @@ namespace SportsStore.Controller
                 {
                     LoggedInUser.RememberMe = true;
                 }
+                AddLog(LoggedInUser.Id, $"id: {LoggedInUser.Id} email:{LoggedUserEmail} logged in", ActionTypes.Login);
                 AddLog(LoggedInUser.Id, $"id:{LoggedInUser.Id} start program", ActionTypes.StartUp);
                 return;
             }
@@ -365,8 +255,9 @@ namespace SportsStore.Controller
                 {
                     IsRememberMe = true;
                 }
-                db.LoggedIns.Clear(db);
+                new Delete().ClearLoggedIns();
                 AddLoggedIn(userId);
+                AddLog(LoggedInUser.Id, $"id: {LoggedInUser.Id} email:{LoggedUserEmail} logged in", ActionTypes.Login);
                 AddLog(LoggedInUser.Id, $"id:{LoggedInUser.Id} start program", ActionTypes.StartUp);
                 return;
             }

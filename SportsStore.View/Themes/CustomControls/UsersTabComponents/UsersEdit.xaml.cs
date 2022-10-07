@@ -9,8 +9,10 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
 {
     public partial class UsersEdit : UserControl
     {
-        private readonly Write writer;
+        private readonly Create writer;
         private readonly Read reader;
+        private readonly Delete deleter;
+        private readonly Update update;
 
         public static UsersEdit Instatnce;
         public UsersEdit()
@@ -18,6 +20,8 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
             InitializeComponent();
             writer = new();
             reader = new();
+            deleter = new();
+            update = new();
             Instatnce = this;
 
             // Fill BoxUserId
@@ -54,7 +58,7 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                writer.ChangeUserPassword(Convert.ToInt16(BoxUserId), Md5Hash.Create("12345"));
+                update.UserPassword(Convert.ToInt16(BoxUserId), Md5Hash.Create("12345"));
             }
         }
         private void BtnRemove_Click(object sender, RoutedEventArgs e)
@@ -64,7 +68,7 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                writer.RemoveUser(Convert.ToInt16(BoxUserId.Text));
+                deleter.RemoveUser(Convert.ToInt16(BoxUserId.Text));
                 MainWindow.Instance.RefreshDgrid(MainWindow.Instance.Dgrid4);
             }
         }
@@ -81,7 +85,7 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                writer.ChangeUserType(Convert.ToInt16(BoxUserId.Text), userType);
+                update.UserType(Convert.ToInt16(BoxUserId.Text), userType);
                 MainWindow.Instance.RefreshDgrid(MainWindow.Instance.Dgrid4);
             }
 
@@ -93,7 +97,7 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                writer.ChangeUserEmail(Convert.ToInt16(BoxUserId.Text), BoxUserEmail.Text);
+                update.UserEmail(Convert.ToInt16(BoxUserId.Text), BoxUserEmail.Text);
                 MainWindow.Instance.RefreshDgrid(MainWindow.Instance.Dgrid4);
             }
         }
@@ -104,7 +108,7 @@ namespace SportsStore.View.Themes.CustomControls.UsersTabComponents
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                writer.ChangeUserHireDate(Convert.ToInt16(BoxUserId), BoxHireDate.Text);
+                update.UserHireDate(Convert.ToInt16(BoxUserId), BoxHireDate.Text);
             }
         }
     }

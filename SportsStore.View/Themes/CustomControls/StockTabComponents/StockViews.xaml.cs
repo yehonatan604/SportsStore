@@ -111,14 +111,14 @@ namespace SportsStore.View.Themes.CustomControls
             
             if (byType)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByItemPrice",
+                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetStock("ViewsByItemPrice",
                                                      CmbBoxViewByItemType.Text,
                                                      minPrice,
                                                      maxPrice).ToList();
             }
             if (byType && byInnerType)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByInnerItemPrice",
+                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetStock("ViewsByInnerItemPrice",
                                                      CmbBoxViewByItemType.Text,
                                                      CmbBoxViewByInnerType.Text,
                                                      minPrice,
@@ -127,21 +127,21 @@ namespace SportsStore.View.Themes.CustomControls
             
             if (byType && byInnerType && byColor)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByColor",
+                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetStock("ViewsByColor",
                                                      CmbBoxViewByItemType.Text,
                                                      CmbBoxViewByInnerType.Text,
                                                      CmbBoxViewByColor.Text).ToList();
             }
             if (byType && byInnerType && bySize)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsBySize",
+                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetStock("ViewsBySize",
                                                      CmbBoxViewByItemType.Text,
                                                      CmbBoxViewByInnerType.Text,
                                                      CmbBoxViewBySize.Text).ToList();
             }
             if (byType && byInnerType && byColor && bySize)
             {
-                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetTable("ViewsByAll",
+                MainWindow.Instance.Dgrid1.ItemsSource = reader.GetStock("ViewsByAll",
                                                      CmbBoxViewByItemType.Text,
                                                      CmbBoxViewByInnerType.Text,
                                                      CmbBoxViewByColor.Text,

@@ -11,7 +11,7 @@ namespace SportsStore.View
     public partial class LogInWindow : Window
     {
         private readonly Read reader;
-        private readonly Write writer;
+        private readonly Create writer;
 
         public LogInWindow()
         {
@@ -52,12 +52,12 @@ namespace SportsStore.View
         {
             if (reader.CheckLogin(BoxEmail.Text, BoxPassword.Password))
             {
-                Write.ChangeLoggedUserEmail(BoxEmail.Text);
+                Create.ChangeLoggedUserEmail(BoxEmail.Text);
                 MessageBox.Show($"{BoxEmail.Text} Logged in Succesfully");
 
                 if (ChkBoxRemember.IsChecked == true)
                 {
-                    Write.IsRememberMe = true;
+                    Create.IsRememberMe = true;
                 }
                 Close();
             }
@@ -68,7 +68,7 @@ namespace SportsStore.View
         }
         private void OnExit(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            writer.ExitProgram();
+            writer.OnExitProgram();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SportsStore.View.Themes.CustomControls
     /// </summary>
     public partial class StockSell : UserControl
     {
-        private readonly Write writer;
+        private readonly Create writer;
         private readonly Read reader;
         public static StockSell Instance;
         public StockSell()

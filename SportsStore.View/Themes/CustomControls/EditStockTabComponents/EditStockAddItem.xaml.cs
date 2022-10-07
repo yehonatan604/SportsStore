@@ -20,7 +20,7 @@ namespace SportsStore.View.Themes.CustomControls.EditStockTabComponents
 {
     public partial class EditStockAddItem : UserControl
     {
-        Write writer;
+        Create writer;
         public static EditStockAddItem Instance;
         public EditStockAddItem()
         {

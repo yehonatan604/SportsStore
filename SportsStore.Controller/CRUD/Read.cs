@@ -3,20 +3,21 @@ using SportsStore.Enums;
 using SportsStore.Model;
 using SportsStore.Model.Costumers;
 using SportsStore.Model.Items;
+using SportsStore.Model.Users;
 using SportStore.Controller.DbConnector;
 using System.Reflection.Metadata.Ecma335;
 
 namespace SportsStore.Controller
 {
-    public class Read : IDbConnectable
+    public class Read : DbCrud, IDbReadable
     {
         // Db Connector Access
-        private readonly StoreContext db;
+        private readonly StoreContext? db;
 
         // Constructor
-        public Read()
+        public Read() : base()
         {
-            db = DbConnector.GetInstance(this).Db;
+            db = IDbConnectable.Db;
         }
 
         // Checks
@@ -48,7 +49,210 @@ namespace SportsStore.Controller
         }
         public int CheckAuthorizationLevel()
         {
-            return (int)Write.LoggedInUser.UserType;
+            return (int)Create.LoggedInUser.UserType;
+        }
+
+        // GetTable - Defualt view for each table
+        public IEnumerable<object> GetTable(string s = "*")
+        {
+            switch (s)
+            {
+                case "Sales":
+                    {
+                        return db.SaleViews;
+                    }
+                case "Customers":
+                    {
+                        return db.customers;
+                    }
+                case "Users":
+                    {
+                        return db.Users;
+                    }
+                case "Logs":
+                    {
+                        return from log in db.Logs
+                               orderby log.Id ascending
+                               select new
+                               {
+                                   log.Id,
+                                   UserId = log.User.Id,
+                                   log.User.FirstName,
+                                   log.User.LastName,
+                                   ActionType = log.ActionType.ToString(),
+                                   log.DateTime
+                               };
+                    }
+                default: // Stock View is default
+                    {
+                        return db.Stocks;
+                    }
+            };
+        }
+
+        // GetStock Overloads - an overload for each case of given arguments
+        public IEnumerable<object> GetStock(string s, string arg1)
+        {
+            switch (s)
+            {
+                case "ViewsByType":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.ItemType == arg1
+                               select stock;
+                    }
+
+                case "ViewsByColor":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.Color == arg1
+                               select stock;
+                    }
+                case "ViewsBySize":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.Size == arg1
+                               select stock;
+                    }
+                default:
+                    {
+                        return GetTable();
+                    }
+            };
+        }
+        public IEnumerable<object> GetStock(string s, string arg1, string arg2)
+        {
+            switch (s)
+            {
+                case "ViewsByPrice":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.Price > Convert.ToInt16(arg1) && item.Price < Convert.ToInt32(arg2)
+                               select stock;
+                    }
+                case "ViewsByInnerType":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.ItemType == arg1 && item.ItemInnerType == arg2
+                               select stock;
+                    }
+                case "ByTypeInnerType":
+                    {
+                        return from sale in db.Sales
+                               where sale.Item.ItemType == arg1 && sale.Item.ItemInnerType == arg2
+                               select sale;
+                    }
+
+                case "ByTPrice":
+                    {
+                        return from sale in db.Sales
+                               where sale.TotalPrice > Convert.ToInt32(arg1) && sale.TotalPrice < Convert.ToInt32(arg2)
+                               select sale;
+                    }
+                default:
+                    {
+                        return GetTable();
+                    }
+            };
+        }
+        public IEnumerable<object> GetStock(string s, string arg1, string arg2, string arg3)
+        {
+            switch (s)
+            {
+                case "ViewsByItemPrice":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.ItemType == arg1 &&
+                                     item.Price > Convert.ToInt16(arg2) &&
+                                     item.Price < Convert.ToInt32(arg3)
+                               select stock;
+                    }
+                case "ViewsByColor":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Color == arg3
+                               select stock;
+                    }
+                case "ViewsBySize":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Size == arg3
+                               select stock;
+                    }
+                default:
+                    {
+                        return GetTable();
+                    }
+            };
+        }
+        public IEnumerable<object> GetStock(string s, string arg1, string arg2, string arg3, string arg4)
+        {
+            switch (s)
+            {
+                case "ViewsByInnerItemPrice":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.ItemType == arg1 &&
+                                     item.ItemInnerType == arg2 &&
+                                     item.Price > Convert.ToInt16(arg3) &&
+                                     item.Price < Convert.ToInt32(arg4)
+                               select stock;
+                    }
+
+                case "ViewsByAllNoPrice":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Color == arg3 && item.Size == arg4
+                               select stock;
+                    }
+                default:
+                    {
+                        return GetTable();
+                    }
+            }
+        }
+        public IEnumerable<object> GetStock(string s, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6)
+        {
+            switch (s)
+            {
+                case "ViewsByAll":
+                    {
+                        return from stock in db.Stocks
+                               join item in db.Items
+                               on stock.Item.Id equals item.Id
+                               where item.ItemType == arg1 &&
+                                     item.ItemInnerType == arg2 &&
+                                     item.Color == arg3 &&
+                                     item.Size == arg4 &&
+                                     item.Price > Convert.ToInt16(arg5) &&
+                                     item.Price < Convert.ToInt32(arg6)
+                               select stock;
+                    }
+                default:
+                    {
+                        return GetTable();
+                    }
+            }
         }
 
         // GetCustomers Overloads - an overload for each case of given arguments
@@ -332,375 +536,105 @@ namespace SportsStore.Controller
 
         // GetUser Overloads - an overload for each case of given arguments
 
-        public IEnumerable<object> GetUsers(string s, string arg1) =>
-            s switch
-            {
-                "ByType" => from user in db.Users
-                            where user.UserType == (UserTypes)Convert.ToInt16(arg1)
+        public IEnumerable<object> GetUsers(string s, string arg1) => s switch
+        {
+            "ByType" => from user in db.Users
+                        where user.UserType == (UserTypes)Convert.ToInt16(arg1)
+                        select user,
+
+            "BySaleDate" => from user in db.Users
+                            join sale in db.Sales
+                            on user.Id equals sale.User.Id
+                            where sale.SaleDate.Date.ToString() == arg1
                             select user,
 
-                "BySaleDate" => from user in db.Users
+            "ByHireYear" => from user in db.Users
+                            where user.HireDate.Year.ToString() == arg1
+                            select user,
+
+            _ => throw new NotImplementedException()
+        };
+        public IEnumerable<object> GetUsers(string s, string arg1, string arg2) => s switch
+        {
+            "ByTypeSaleDate" => from user in db.Users
                                 join sale in db.Sales
                                 on user.Id equals sale.User.Id
-                                where sale.SaleDate.Date.ToString() == arg1
+                                where user.UserType == (UserTypes)Convert.ToInt16(arg1) && sale.SaleDate.Date.ToString() == arg2
                                 select user,
 
-                "ByHireYear" => from user in db.Users
-                                where user.HireDate.Year.ToString() == arg1
+            "ByTypeHireYear" => from user in db.Users
+                                where user.UserType == (UserTypes)Convert.ToInt16(arg1) && user.HireDate.Year.ToString() == arg2
                                 select user,
 
-                _ => throw new NotImplementedException()
-            };
-        public IEnumerable<object> GetUsers(string s, string arg1, string arg2) =>
-            s switch
-            {
-                "ByTypeSaleDate" => from user in db.Users
+            "BySaleDateHireYear" => from user in db.Users
                                     join sale in db.Sales
-                                    on user.Id equals sale.User.Id
-                                    where user.UserType == (UserTypes)Convert.ToInt16(arg1) && sale.SaleDate.Date.ToString() == arg2
+                                on user.Id equals sale.User.Id
+                                    where sale.SaleDate.Date.ToString() == arg1 && user.HireDate.Year.ToString() == arg1
                                     select user,
 
-                "ByTypeHireYear" => from user in db.Users
-                                    where user.UserType == (UserTypes)Convert.ToInt16(arg1) && user.HireDate.Year.ToString() == arg2
-                                    select user,
-
-                "BySaleDateHireYear" => from user in db.Users
-                                        join sale in db.Sales
-                                    on user.Id equals sale.User.Id
-                                        where sale.SaleDate.Date.ToString() == arg1 && user.HireDate.Year.ToString() == arg1
-                                        select user,
-
-                _ => throw new NotImplementedException()
-            };
-        public IEnumerable<object> GetUsers(string s, string arg1, string arg2, string arg3) =>
-            s switch
-            {
-                "ByAll" => (from user in db.Users
-                           join sale in db.Sales
-                            on user.Id equals sale.User.Id
-                           where 
-                            user.UserType == (UserTypes)Convert.ToInt16(arg1) && 
-                            sale.SaleDate.Date.ToString() == arg2 && 
-                            user.HireDate.Year.ToString() == arg3
-                           select user).Distinct(),
-
-                _ => throw new NotImplementedException()
-            };
-
-        // GetTable Overloads - an overload for each case of given arguments
-        public IEnumerable<object> GetTable(string s = "*")
+            _ => throw new NotImplementedException()
+        };
+        public IEnumerable<object> GetUsers(string s, string arg1, string arg2, string arg3) => s switch
         {
-            switch (s)
-            {
-                case "Sales":
-                    {
-                        return db.SaleViews;
-                    }
-                case "Customers":
-                    {
-                        return db.customers;
-                    }
-                case "Users":
-                    {
-                        return db.Users;
-                    }
-                case "Logs":
-                    {
-                        return from log in db.Logs
-                               orderby log.Id ascending
-                               select new
-                               {
-                                   log.Id,
-                                   UserId = log.User.Id,
-                                   log.User.FirstName,
-                                   log.User.LastName,
-                                   ActionType = log.ActionType.ToString(),
-                                   log.DateTime
-                               };
-                    }
-                default: // Stock View is default
-                    {
-                        return db.Stocks;
-                    }
-            };
-        }
-        public IEnumerable<object> GetTable(string s, string arg1)
-        {
-            switch (s)
-            {
-                case "ViewsByType":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.ItemType == arg1
-                               select stock;
-                    }
+            "ByAll" => (from user in db.Users
+                        join sale in db.Sales
+                         on user.Id equals sale.User.Id
+                        where
+                         user.UserType == (UserTypes)Convert.ToInt16(arg1) &&
+                         sale.SaleDate.Date.ToString() == arg2 &&
+                         user.HireDate.Year.ToString() == arg3
+                        select user).Distinct(),
 
-                case "ViewsByColor":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.Color == arg1
-                               select stock;
-                    }
-                case "ViewsBySize":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.Size == arg1
-                               select stock;
-                    }
-                case "LogsById":
-                    {
-                        return from log in db.Logs
-                               orderby log.Id ascending
-                               where log.User.Id == Convert.ToInt16(arg1)
-                               select new
-                               {
-                                   log.Id,
-                                   UserId = log.User.Id,
-                                   log.User.FirstName,
-                                   log.User.LastName,
-                                   ActionType = log.ActionType.ToString(),
-                                   log.DateTime
-                               };
-                    }
-                case "LogsByDate":
-                    {
-                        return from log in db.Logs
-                               orderby log.Id ascending
-                               where log.DateTime.ToString() == arg1
-                               select new
-                               {
-                                   log.Id,
-                                   UserId = log.User.Id,
-                                   log.User.FirstName,
-                                   log.User.LastName,
-                                   ActionType = log.ActionType.ToString(),
-                                   log.DateTime
-                               };
-                    }
-                case "LogsByAction":
-                    {
-                        return from log in db.Logs
-                               orderby log.Id ascending
-                               where log.ActionType == (ActionTypes)Enum.Parse(typeof(ActionTypes), arg1)
-                               select new
-                               {
-                                   log.Id,
-                                   UserId = log.User.Id,
-                                   log.User.FirstName,
-                                   log.User.LastName,
-                                   ActionType = log.ActionType.ToString(),
-                                   log.DateTime
-                               };
-                    }
-                default:
-                    {
-                        return GetTable();
-                    }
-            };
-        }
-        public IEnumerable<object> GetTable(string s, string arg1, string arg2)
-        {
-            switch (s)
-            {
-                case "ViewsByPrice":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.Price > Convert.ToInt16(arg1) && item.Price < Convert.ToInt32(arg2)
-                               select stock;
-                    }
-                case "ViewsByInnerType":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.ItemType == arg1 && item.ItemInnerType == arg2
-                               select stock;
-                    }
-                case "ByTypeInnerType":
-                    {
-                        return from sale in db.Sales
-                               where sale.Item.ItemType == arg1 && sale.Item.ItemInnerType == arg2
-                               select sale;
-                    }
+            _ => throw new NotImplementedException()
+        };
 
-                case "ByTPrice":
-                    {
-                        return from sale in db.Sales
-                               where sale.TotalPrice > Convert.ToInt32(arg1) && sale.TotalPrice < Convert.ToInt32(arg2)
-                               select sale;
-                    }
-                case "LogsByActionDate":
-                    {
-                        return from log in db.Logs
-                               where log.ActionType == (ActionTypes)Enum.Parse(typeof(ActionTypes), arg1) && log.DateTime.Date.ToString() == arg2
-                               select new
-                               {
-                                   log.Id,
-                                   UserId = log.User.Id,
-                                   log.User.FirstName,
-                                   log.User.LastName,
-                                   ActionType = log.ActionType.ToString(),
-                                   log.DateTime
-                               };
-                    }
-                case "LogsByActionId":
-                    {
-                        return from log in db.Logs
-                               orderby log.Id ascending
-                               where log.User.Id == Convert.ToInt16(arg1) && log.ActionType == (ActionTypes)Enum.Parse(typeof(ActionTypes), arg2)
-                               select new
-                               {
-                                   log.Id,
-                                   UserId = log.User.Id,
-                                   log.User.FirstName,
-                                   log.User.LastName,
-                                   ActionType = log.ActionType.ToString(),
-                                   log.DateTime
-                               };
-                    }
-                case "LogsByUserIdDate":
-                    {
-                        return from log in db.Logs
-                               orderby log.Id ascending
-                               where log.DateTime.Date.ToString() == arg1 && log.User.Id == Convert.ToInt16(arg2)
-                               select new
-                               {
-                                   log.Id,
-                                   UserId = log.User.Id,
-                                   log.User.FirstName,
-                                   log.User.LastName,
-                                   ActionType = log.ActionType.ToString(),
-                                   log.DateTime
-                               };
-                    }
-                default:
-                    {
-                        return GetTable();
-                    }
-            };
-        }
-        public IEnumerable<object> GetTable(string s, string arg1, string arg2, string arg3)
-        {
-            switch (s)
-            {
-                case "ViewsByItemPrice":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.ItemType == arg1 &&
-                                     item.Price > Convert.ToInt16(arg2) &&
-                                     item.Price < Convert.ToInt32(arg3)
-                               select stock;
-                    }
-                case "ViewsByColor":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Color == arg3
-                               select stock;
-                    }
-                case "ViewsBySize":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Size == arg3
-                               select stock;
-                    }
-                case "LogsByAll":
-                    {
-                        return from log in db.Logs
-                               orderby log.Id ascending
-                               where log.DateTime.Date.ToString() == arg1 && log.User.Id == Convert.ToInt16(arg2) && log.ActionType == (ActionTypes)Enum.Parse(typeof(ActionTypes), arg3)
-                               select new
-                               {
-                                   log.Id,
-                                   UserId = log.User.Id,
-                                   log.User.FirstName,
-                                   log.User.LastName,
-                                   ActionType = log.ActionType.ToString(),
-                                   log.DateTime
-                               };
-                    }
-                default:
-                    {
-                        return GetTable();
-                    }
-            };
-        }
-        public IEnumerable<object> GetTable(string s, string arg1, string arg2, string arg3, string arg4)
-        {
-            switch (s)
-            {
-                case "ViewsByInnerItemPrice":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.ItemType == arg1 &&
-                                     item.ItemInnerType == arg2 &&
-                                     item.Price > Convert.ToInt16(arg3) &&
-                                     item.Price < Convert.ToInt32(arg4)
-                               select stock;
-                    }
+        // GetLogs Overloads - an overload for each case of given arguments
 
-                case "ViewsByAllNoPrice":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Color == arg3 && item.Size == arg4
-                               select stock;
-                    }
-                default:
-                    {
-                        return GetTable();
-                    }
-            }
-        }
-        public IEnumerable<object> GetTable(string s, string arg1, string arg2, string arg3, string arg4, string arg5, string arg6)
+        public IEnumerable<object> GetLogs(string s, string arg1) => s switch
         {
-            switch (s)
-            {
-                case "SalesByAll":
-                    {
-                        return from sale in db.Sales
-                               join item in db.Items
-                               on sale.Item.Id equals item.Id
-                               where sale.Item.ItemType == arg1 && item.ItemInnerType == arg2 && item.Color == arg3 && item.Size == arg4 &&
-                                     item.Price > Convert.ToInt16(arg5) &&
-                                     item.Price < Convert.ToInt32(arg6)
-                               select sale;
-                    }
-                case "ViewsByAll":
-                    {
-                        return from stock in db.Stocks
-                               join item in db.Items
-                               on stock.Item.Id equals item.Id
-                               where item.ItemType == arg1 &&
-                                     item.ItemInnerType == arg2 &&
-                                     item.Color == arg3 &&
-                                     item.Size == arg4 &&
-                                     item.Price > Convert.ToInt16(arg5) &&
-                                     item.Price < Convert.ToInt32(arg6)
-                               select stock;
-                    }
-                default:
-                    {
-                        return GetTable();
-                    }
-            }
-        }
+            "ByUserType" => from logs in db.Logs
+                            where logs.User.UserType == (UserTypes)Convert.ToInt16(arg1)
+                            select logs,
+
+            "ByActionType" => from logs in db.Logs
+                              where logs.ActionType == (ActionTypes)Enum.Parse(typeof(ActionTypes), arg1)
+                              select logs,
+
+            "ByActionDate" => from logs in db.Logs
+                              where logs.DateTime.ToString() == arg1
+                              select logs,
+
+            _ => throw new NotImplementedException()
+        };
+        public IEnumerable<object> GetLogs(string s, string arg1, string arg2) => s switch
+        {
+            "ByUserTypeAction" => from logs in db.Logs
+                                  where logs.User.UserType == (UserTypes)Convert.ToInt16(arg1) && 
+                                        logs.ActionType == (ActionTypes)Enum.Parse(typeof(ActionTypes), arg2)
+                                  select logs,
+
+            "ByUserTypeDate" => from logs in db.Logs
+                                where logs.User.UserType == (UserTypes)Convert.ToInt16(arg1) && 
+                                      logs.DateTime.ToString() == arg2
+                                select logs,
+
+            "ByActionTypeDate" => from logs in db.Logs
+                                  where logs.ActionType == (ActionTypes)Enum.Parse(typeof(ActionTypes), arg1) && 
+                                        logs.DateTime.ToString() == arg2
+                                  select logs,
+
+            _ => throw new NotImplementedException()
+        };
+        public IEnumerable<object> GetLogs(string s, string arg1, string arg2, string arg3) => s switch
+        {
+            "ByAll" => from logs in db.Logs
+                       where logs.User.UserType == (UserTypes)Convert.ToInt16(arg1) && 
+                             logs.ActionType == (ActionTypes)Enum.Parse(typeof(ActionTypes), arg2) && 
+                             logs.DateTime.ToString() == arg3
+                       select logs,
+
+            _ => throw new NotImplementedException()
+        };
 
         // Search Methods
         public IEnumerable<object> ItemSearch(string str)
@@ -727,6 +661,18 @@ namespace SportsStore.Controller
                    where (user.Id.ToString()).Contains(str)
                    select user;
         }
+        public IEnumerable<object> LogsSearchId(string str)
+        {
+            return from logs in db.Logs
+                   where (logs.User.Id.ToString()).Contains(str)
+                   select logs;
+        }
+        public IEnumerable<object> LogsSearchName(string str)
+        {
+            return from logs in db.Logs
+                   where (logs.User.FirstName).Contains(str) || (logs.User.LastName).Contains(str)
+                   select logs;
+        }
 
         // Return UserType as string 
         public string GetUserType(int id)
@@ -747,9 +693,6 @@ namespace SportsStore.Controller
 
                 "ByDate" => (from sale in db.Sales
                              select sale.SaleDate.Date.ToString()).Distinct().ToList(),
-
-                "ByLogUserId" => (from log in db.Logs
-                                  select log.User.Id.ToString()).Distinct().ToList(),
 
                 "ByLogAction" => (from log in db.Logs
                                   select log.ActionType.ToString()).Distinct().ToList(),

@@ -16,6 +16,7 @@ using SportsStore.View.Themes.CustomControls.EditStockTabComponents;
 using SportsStore.View.Themes.CustomControls.SalesTabComponents;
 using SportsStore.View.Themes.CustomControls.CostumerTabCComponents;
 using SportsStore.View.Themes.CustomControls.UsersTabComponents;
+using SportsStore.View.Themes.CustomControls.LogsTabComponents;
 
 namespace SportsStore.View
 {
@@ -24,7 +25,7 @@ namespace SportsStore.View
     public partial class MainWindow : Window
     {
         // Fields
-        private readonly Write writer;
+        private readonly Create writer;
         private readonly Read reader;
         public RefreshDgrid RefreshDgrid { get; set; }
         public static MainWindow Instance { get; private set; }
@@ -33,32 +34,38 @@ namespace SportsStore.View
         {
             InitializeComponent();
             Instance = this;
+            reader = new();
             writer = new();
             writer.OnStartProgram();
-            if (!Write.IsRememberMe)
+            
+            if (!Create.IsRememberMe)
             {
                 LogInWindow loginWindow = new();
                 loginWindow.ShowDialog();
             }
-            reader = new();
 
+            RefreshDgrid = new(RefreshDataGrid);
+            RefreshDgrid.Invoke();
+            DgridController(Dgrid1);
+
+            FillBoxes();
+            StartClock();
+        }
+
+        // Fill ComboBoxes
+
+        private void FillBoxes()
+        {
             CmboBoxFiller.Fill(new ItemTypes(), StockViews.Instance.CmbBoxViewByItemType);
             CmboBoxFiller.Fill(new ItemTypes(), EditStockAddItem.Instance.BoxItemType);
             CmboBoxFiller.Fill(new ItemTypes(), EditStockEditItem.Instance.BoxItemType);
             CmboBoxFiller.Fill(new ItemTypes(), SaleViews.Instance.CmbBoxByItemType);
             CmboBoxFiller.Fill(new ColorTypes(), EditStockAddItem.Instance.BoxColor);
             CmboBoxFiller.Fill(new ColorTypes(), EditStockEditItem.Instance.BoxColor);
-            //CmboBoxFiller.Fill(new UserTypes(), CmboBoxChangeType);
             CmboBoxFiller.FillSalesBoxes();
-            FillLogsBoxes();
-
-            RefreshDgrid = new(RefreshDataGrid);
-            RefreshDgrid.Invoke();
-            DgridController(Dgrid1);
-
-            StartClock();
+            CmboBoxFiller.FillUserBoxes();
+            CmboBoxFiller.FillLogsBoxes();
         }
-
         // Digital Clock
         private void StartClock()
         {
@@ -215,79 +222,36 @@ namespace SportsStore.View
         // Logs_Tab Event Handlers
         private void Logs_Tab_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (reader.CheckAuthorizationLevel() != 0)
-            {
-                MessageBox.Show("You are not authorized to do that!");
-                return;
-            }
+            RefreshDataGrid(Dgrid5);
+            DgridController(Dgrid5);
         }
-        private void BtnLogsGo_Click(object sender, RoutedEventArgs e)
+        private void Dgrid5_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            bool byUser = CmboBoxLogByUserId.Text != string.Empty;
-            bool byDate = CmboBoxLogByDate.Text != string.Empty;
-            bool byAction = CmboBoxLogByAction.Text != string.Empty;
-
-            if (byUser && byDate)
+            try
             {
-                Dgrid4.ItemsSource = reader.GetTable("LogsByUserIdDate",
-                                                     CmboBoxLogByDate.Text,
-                                                     CmboBoxLogByUserId.Text).ToList();
+                if (GetDgridContent(Dgrid5) != "")
+                {
+                    LogsInfo.Instance.TboxInfo.Text =
+                        $"{GetDgridContent(Dgrid5, 1)} {GetDgridContent(Dgrid5, 2)}\n" +
+                        $"id: {GetDgridContent(Dgrid5)}\n" +
+                        $"User Type: {GetDgridContent(Dgrid5, 4)}\n" +
+                        $"Email: {GetDgridContent(Dgrid5, 5)}\n" +
+                        $"Hire Date: {GetDgridContent(Dgrid5, 3)}\n\n";
+                }
             }
-            if (byAction && byDate)
+            catch
             {
-                Dgrid4.ItemsSource = reader.GetTable("LogsByActionDate",
-                                                      CmboBoxLogByAction.Text,
-                                                      CmboBoxLogByDate.Text).ToList();
+                RefreshDataGrid(Dgrid5);
             }
-            if (byAction && byUser)
-            {
-                Dgrid4.ItemsSource = reader.GetTable("LogsByActionId",
-                                                      CmboBoxLogByUserId.Text,
-                                                      CmboBoxLogByAction.Text).ToList();
-            }
-            if (byAction && byUser && byDate)
-            {
-                Dgrid4.ItemsSource = reader.GetTable("LogsByAll",
-                                                      CmboBoxLogByDate.Text,
-                                                      CmboBoxLogByUserId.Text,
-                                                      CmboBoxLogByAction.Text).ToList();
-            }
-            return;
-        }
-        private void BtnMakeLogFile_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Forms.SaveFileDialog saveFileDialog = new();
-            saveFileDialog.ShowDialog();
-            List<string> list = new();
-            foreach (var item in Dgrid4.Items)
-            {
-                list.Add(item.ToString());
-            }
-            File.WriteAllLines(saveFileDialog.FileName, list);
         }
 
         // OnExit Event Handler
         private void OnExit(object sender, CancelEventArgs e)
         {
-            writer.ExitProgram();
+            writer.OnExitProgram();
         }
 
         // ComboBox Fillers
-        private void FillLogsBoxes()
-        {
-            foreach (string str in reader.GetList("ByLogUserId"))
-            {
-                CmboBoxLogByUserId.Items.Add(str);
-            }
-            foreach (string str in reader.GetList("ByLogAction"))
-            {
-                CmboBoxLogByAction.Items.Add(str);
-            }
-            foreach (string str in reader.GetList("ByLogDate"))
-            {
-                CmboBoxLogByDate.Items.Add(str);
-            }
-        }
 
         // DataGrids Handlers
         private void DgridController(DataGrid currentGrid)
@@ -319,6 +283,10 @@ namespace SportsStore.View
             if (dGrid == Dgrid4)
             {
                 Dgrid4.ItemsSource = reader.GetTable("Users").ToList();
+            }
+            if (dGrid == Dgrid5)
+            {
+                Dgrid5.ItemsSource = reader.GetTable("Logs").ToList();
             }
         }
         private string GetDgridContent(DataGrid dGrid, int cell = 0)

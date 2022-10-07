@@ -19,7 +19,7 @@ namespace SportsStore.View.Themes.CustomControls.EditStockTabComponents
 {
     public partial class EditStockEditItem : UserControl
     {
-        Write writer;
+        Create writer;
         public static EditStockEditItem Instance;
         public EditStockEditItem()
         {
@@ -32,7 +32,7 @@ namespace SportsStore.View.Themes.CustomControls.EditStockTabComponents
         {
             if (!string.IsNullOrEmpty(BoxItemId.Text))
             {
-                MessageBox.Show(writer.EditStock(Convert.ToInt16(BoxItemId.Text), BoxItemName.Text, 
+                MessageBox.Show(new Update().EditStock(Convert.ToInt16(BoxItemId.Text), BoxItemName.Text, 
                                                  BoxItemPrice.Text, BoxQuantity.Text, BoxItemType.Text, 
                                                  BoxItemInnerType.Text, BoxColor.Text, BoxSize.Text) ?
                                                  "Stock Details Was Changed Successfuly" : 

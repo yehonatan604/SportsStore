@@ -1,4 +1,6 @@
-﻿<Window xmlns:UsersTabComponents="clr-namespace:SportsStore.View.Themes.CustomControls.UsersTabComponents"  xmlns:CostumerTabCComponents="clr-namespace:SportsStore.View.Themes.CustomControls.CostumerTabCComponents" 
+﻿<Window xmlns:LogsTabComponents="clr-namespace:SportsStore.View.Themes.CustomControls.LogsTabComponents"  
+        xmlns:UsersTabComponents="clr-namespace:SportsStore.View.Themes.CustomControls.UsersTabComponents"  
+        xmlns:CostumerTabCComponents="clr-namespace:SportsStore.View.Themes.CustomControls.CostumerTabCComponents" 
         xmlns:SalesTabComponents="clr-namespace:SportsStore.View.Themes.CustomControls.SalesTabComponents"  
         xmlns:EditStockTabComponents="clr-namespace:SportsStore.View.Themes.CustomControls.EditStockTabComponents" 
         xmlns:CustomControls="clr-namespace:SportsStore.View.Themes.CustomControls"  
@@ -103,7 +105,7 @@
                     </Border>
 
                     <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="4" Grid.ColumnSpan="4" Style="{StaticResource HeadLines1}" Background="White">
-                        <DataGrid x:Name="Dgrid1" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,0" Grid.Row="4" SelectionChanged="DGrid1_SelectionChanged"/>
+                        <DataGrid x:Name="Dgrid1" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,43" Grid.Row="4" SelectionChanged="DGrid1_SelectionChanged"/>
                     </Border>
                 </Grid>
             </TabItem>
@@ -158,7 +160,7 @@
                     </Border>
 
                     <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="4" Grid.ColumnSpan="4" Style="{StaticResource HeadLines1}" Background="White">
-                        <DataGrid x:Name="Dgrid3" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,0" Grid.Row="4" SelectionChanged="Dgrid3_SelectionChanged"/>
+                        <DataGrid x:Name="Dgrid3" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,43" Grid.Row="4" SelectionChanged="Dgrid3_SelectionChanged"/>
                     </Border>
                 </Grid>
             </TabItem>
@@ -206,7 +208,7 @@
                     </Border>
 
                     <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="4" Grid.ColumnSpan="4" Style="{StaticResource HeadLines1}" Background="White">
-                        <DataGrid x:Name="Dgrid2" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,0" Grid.Row="4" SelectionChanged="Dgrid2_SelectionChanged"/>
+                        <DataGrid x:Name="Dgrid2" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,43" Grid.Row="4" SelectionChanged="Dgrid2_SelectionChanged"/>
                     </Border>
                 </Grid>
             </TabItem>
@@ -253,11 +255,10 @@
                         <EditStockTabComponents:EditStockEditItem/>
                     </Border>
                     <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="4" Grid.ColumnSpan="4" Style="{StaticResource HeadLines1}" Background="White">
-                        <DataGrid x:Name="Dgrid1_1" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,0" Grid.Row="4" SelectionChanged="DGrid1_1SelectionChanged"/>
+                        <DataGrid x:Name="Dgrid1_1" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,43" Grid.Row="4" SelectionChanged="DGrid1_1SelectionChanged"/>
                     </Border>
                 </Grid>
             </TabItem>
-
             <TabItem x:Name="Users_Tab" MouseLeftButtonUp="Users_Tab_MouseLeftButtonUp">
                 <TabItem.Header>
                     <WrapPanel Width="240">
@@ -301,10 +302,9 @@
                     </Border>
 
                     <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="4" Grid.ColumnSpan="4" Style="{StaticResource HeadLines1}" Background="White">
-                        <DataGrid x:Name="Dgrid4" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,0" Grid.Row="4" SelectionChanged="Dgrid4_SelectionChanged"/>
+                        <DataGrid x:Name="Dgrid4" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,43" Grid.Row="4" SelectionChanged="Dgrid4_SelectionChanged"/>
                     </Border>
                 </Grid>
-
             </TabItem>
 
             <TabItem x:Name="Logs_Tab" MouseLeftButtonUp="Logs_Tab_MouseLeftButtonUp">
@@ -314,46 +314,38 @@
                         <TextBlock Text="Logs" Style="{StaticResource TabsTblockStyle}" MouseEnter="TabHdrStock_MouseEnter" MouseLeave="TabHdrStock_MouseLeave" />
                     </WrapPanel>
                 </TabItem.Header>
-                <Grid>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="17*" />
-                        <ColumnDefinition Width="25*"/>
-                        <ColumnDefinition Width="75*"/>
-                        <ColumnDefinition Width="304*"/>
-                        <ColumnDefinition Width="421*" />
-                        <ColumnDefinition Width="421*" />
-                    </Grid.ColumnDefinitions>
+                <Grid x:Name="LogsTabGrid">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="4*" />
-                        <RowDefinition Height="4*" />
+                        <RowDefinition Height="0.3*" />
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="0.3*" />
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="4.5*" />
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Views" Margin="49,5,0,0" HorizontalAlignment="Left" FontSize="28" Grid.Column="3"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                    <WrapPanel Orientation="Horizontal" Grid.ColumnSpan="4" Margin="0,51,0,0" Grid.RowSpan="2">
-                        <WrapPanel x:Name="PnlLogsView" Orientation="Vertical" >
-                            <TextBlock Text="By User Id" Margin="10,9,0,0" />
-                            <TextBlock Text="By Date" Margin="10,17,0,0"/>
-                            <TextBlock Text="By Action Type" Margin="10,17,0,0"/>
-                        </WrapPanel>
-                        <WrapPanel x:Name="PnlLogsTboxes" Orientation="Vertical" Margin="25,0,0,0">
-                            <ComboBox x:Name="CmboBoxLogByUserId" Margin="0,4,0,0" />
-                            <ComboBox x:Name="CmboBoxLogByDate" Margin="0,7,0,0" />
-                            <ComboBox x:Name="CmboBoxLogByAction" Margin="0,7,0,0" />
-                        </WrapPanel>
-                    </WrapPanel>
-                    <WrapPanel x:Name="PnlLogsGoBtn" Orientation="Vertical" Margin="0,40,50,0" Grid.Column="3" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top">
-                        <Button x:Name="BtnLogsGo" Content="Go" Margin="0,4,0,0" Style="{StaticResource BtnSellStyle}" Width="70" Click="BtnLogsGo_Click"/>
-                    </WrapPanel>
+                    <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="1,1,0,1" Style="{StaticResource HeadLines1}">
+                        <TextBlock Text="Views" FontFamily="Gill Sans MT" FontWeight="Light" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="28"/>
+                    </Border>
+                    <Border BorderBrush="Gray" BorderThickness="1,0,0,1" Grid.Row="1" Grid.RowSpan="3">
+                        <LogsTabComponents:LogsView HorizontalContentAlignment="Center"/>
+                    </Border>
 
-                    <Button x:Name="BtnMakeLogFile" Content="Save Report" Margin="50,137,0,46" Style="{StaticResource BtnSellStyle}" Width="110" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" Click="BtnMakeLogFile_Click"/>
-                    <TextBlock Text="Log Info" Margin="361,5,0,0" HorizontalAlignment="Left" 
-                               FontSize="28" Grid.Column="4" Grid.ColumnSpan="2"/>
-                    <TextBox Grid.Row="1" Name="TboxLogInfo" Grid.Column="4" Width="460" Height="137" VerticalAlignment="Top" 
-                             HorizontalAlignment="Left" BorderThickness="0" Grid.ColumnSpan="2" Margin="184,6,0,0"/>
+                    <Border BorderBrush="Gray" BorderThickness="1,1,1,1" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource HeadLines2}" >
+                        <TextBlock Text="Info" FontFamily="Gill Sans MT" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="28" Grid.Column="2" />
+                    </Border>
+                    <Border BorderBrush="Gray" BorderThickness="1,0,1,1" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Grid.RowSpan="3">
+                        <LogsTabComponents:LogsInfo />
+                    </Border>
+
+                    <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="4" Grid.ColumnSpan="4" Style="{StaticResource HeadLines1}" Background="White">
+                        <DataGrid x:Name="Dgrid5" Grid.ColumnSpan="4" Background="Transparent" Margin="0,10,0,43" Grid.Row="4" SelectionChanged="Dgrid5_SelectionChanged"/>
+                    </Border>
                 </Grid>
-
             </TabItem>
 
             <TabItem x:Name="Messages_Tab" MouseLeftButtonUp="Logs_Tab_MouseLeftButtonUp">

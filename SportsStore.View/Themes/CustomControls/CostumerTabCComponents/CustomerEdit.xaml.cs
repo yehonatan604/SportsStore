@@ -22,8 +22,9 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
     public partial class CustomerEdit : UserControl
     {
         public static CustomerEdit? Instance { get; set; }
-        public Write writer;
+        public Create writer;
         public Read reader;
+        public Update update;
         public CustomerEdit()
         {
             InitializeComponent();
@@ -31,6 +32,7 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
 
             writer = new();
             reader = new();
+            update = new();
             Instance = this;
         }
 
@@ -56,10 +58,10 @@ namespace SportsStore.View.Themes.CustomControls.CostumerTabCComponents
                                 {
                                     switch (tb.Name[3..])
                                     {
-                                        case "FirstName": { writer.ChangeCustomerFirstName(Convert.ToInt16(customerId), tb.Text); break;};
-                                        case "LastName": { writer.ChangeCustomerLastName(Convert.ToInt16(customerId), tb.Text); break;};
-                                        case "Email": { writer.ChangeCustomerEmail(Convert.ToInt16(customerId), tb.Text); break;};
-                                        case "DateOfBirth": { writer.ChangeCustomerDOB(Convert.ToInt16(customerId), tb.Text); break;};
+                                        case "FirstName": { update.CustomerFirstName(Convert.ToInt16(customerId), tb.Text); break;};
+                                        case "LastName": { update.CustomerLastName(Convert.ToInt16(customerId), tb.Text); break;};
+                                        case "Email": { update.CustomerEmail(Convert.ToInt16(customerId), tb.Text); break;};
+                                        case "DateOfBirth": { update.CustomerDOB(Convert.ToInt16(customerId), tb.Text); break;};
                                     };
                                 }
                             }

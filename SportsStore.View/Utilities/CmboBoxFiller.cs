@@ -1,7 +1,9 @@
 ﻿using SportsStore.Controller;
 using SportsStore.Enums;
 using SportsStore.View.Themes.CustomControls.EditStockTabComponents;
+using SportsStore.View.Themes.CustomControls.LogsTabComponents;
 using SportsStore.View.Themes.CustomControls.SalesTabComponents;
+using SportsStore.View.Themes.CustomControls.UsersTabComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ namespace SportsStore.View.Utilities
 {
     public class CmboBoxFiller
     {
+        private static readonly Read reader = new();
         public static void Fill(Enum sender, ComboBox box)
         {
             foreach (var item in Enum.GetValues(sender.GetType()))
@@ -50,8 +53,6 @@ namespace SportsStore.View.Utilities
 
         public static void FillSalesBoxes()
         {
-            Read reader = new();
-
             foreach (string str in reader.GetList("ByItem"))
             {
                 SaleViews.Instance.CmbBoxByItemType.Items.Add(str);
@@ -63,6 +64,32 @@ namespace SportsStore.View.Utilities
             foreach (string str in reader.GetList("ByDate"))
             {
                 SaleViews.Instance.CmbBoxByDate.Items.Add(str);
+            }
+        }
+        public static void FillUserBoxes()
+        {
+            Fill(new UserTypes(), UsersView.Instance.BoxByUserType);
+
+            foreach (string date in reader.GetList("ByDate"))
+            {
+                UsersView.Instance.BoxBySaleDate.Items.Add(date);
+            }
+            foreach (string date in reader.GetList("ByHireDate"))
+            {
+                UsersView.Instance.BoxByHireYear.Items.Add(date);
+            }
+        }
+        public static void FillLogsBoxes()
+        {
+            Fill(new UserTypes(), LogsView.Instance.BoxByUserType);
+
+            foreach (string str in reader.GetList("ByLogAction"))
+            {
+                LogsView.Instance.BoxByActionType.Items.Add(str);
+            }
+            foreach (string str in reader.GetList("ByLogDate"))
+            {
+                LogsView.Instance.BoxByActionDate.Items.Add(str);
             }
         }
 
