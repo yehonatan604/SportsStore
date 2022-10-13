@@ -23,7 +23,7 @@ namespace SportsStore.View
         public AboutWindow()
         {
             InitializeComponent();
-            Paragraph1.Inlines.Add(File.ReadAllText(@"D:\CSharpProjects\SportsStore\TextFile1.txt"));
+            Paragraph1.Inlines.Add(File.ReadAllText(@"D:\CSharpProjects\SportsStore\ReadMe.txt"));
         }
     }
 }
