@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using SportsStore.Controller;
 using SportsStore.Utilities;
 using SportsStore.Enums;
+using SportsStore.View.Components.RegisterWindowComponents;
 
 namespace SportsStore.View
 {
@@ -15,12 +16,13 @@ namespace SportsStore.View
 
         private void RegBtn_Click(object sender, RoutedEventArgs e)
         {
+            RegistraionForm regForm = RegistraionForm.Instance;
             UserEntityHandler handler = new();
-            if (Validate.Registeration(BoxFname.Text, BoxLname.Text, UserTypes.SalesMan,
-                                       BoxEmail.Text, BoxPassword.Password, BoxConfirm.Password))
+            if (Validate.Registeration(regForm.BoxFname.Text, regForm.BoxLname.Text, UserTypes.SalesMan,
+                                       regForm.BoxEmail.Text, regForm.BoxPassword.Password, regForm.BoxConfirmPassword.Password))
             {
-                handler.Add(BoxFname.Text, BoxLname.Text, UserTypes.SalesMan.ToString(),
-                                BoxEmail.Text, Md5Hash.Create(BoxConfirm.Password));
+                handler.Add(regForm.BoxFname.Text, regForm.BoxLname.Text, UserTypes.SalesMan.ToString(),
+                                regForm.BoxEmail.Text, Md5Hash.Create(regForm.BoxConfirmPassword.Password));
                 MessageBox.Show("User Registered Successfuly");
             }
             else

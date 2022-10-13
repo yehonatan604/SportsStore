@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="SportsStore.View.Components.RegisterWindowComponents.RegistraionForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SportsStore.View.Components.RegisterWindowComponents"
+             mc:Ignorable="d" 
+             Height="170" Width="250">
+    <WrapPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
+        <Grid Width="250">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="First Name:" Style="{StaticResource TblockComponenta}" />
+            <TextBox x:Name="BoxFname" Style="{StaticResource TboxComponenta2}" Grid.Column="1" HorizontalAlignment="Center" Width="100"/>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Last Name:" Style="{StaticResource TblockComponenta}" Margin="0,10,0,0"/>
+            <TextBox x:Name="BoxLname" Width="100" Grid.Column="1" HorizontalAlignment="Center" Margin="0,6,0,0" Style="{StaticResource TboxComponenta2}"/>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Email:" Style="{StaticResource TblockComponenta}" Margin="0,10,0,0"/>
+            <TextBox x:Name="BoxEmail" Width="100" Grid.Column="1" HorizontalAlignment="Center" Margin="0,6,0,0" Style="{StaticResource TboxComponenta2}"/>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Password:" Style="{StaticResource TblockComponenta}" Margin="0,10,0,0"/>
+            <PasswordBox x:Name="BoxPassword" Width="100" Grid.Column="1" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Confirm Password:" Style="{StaticResource TblockComponenta}" Margin="0,10,0,0"/>
+            <PasswordBox x:Name="BoxConfirmPassword" Width="100" Grid.Column="1" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+        </Grid>
+    </WrapPanel>
+</UserControl>
