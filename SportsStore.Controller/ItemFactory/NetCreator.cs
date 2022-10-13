@@ -1,4 +1,5 @@
-﻿using SportsStore.Model.Items;
+﻿using SportsStore.Enums;
+using SportsStore.Model.Items;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,18 @@ namespace SportsStore.Controller.CRUD
 {
     public class NetCreator : ItemCreator
     {
-        public NetCreator(string name, double price, string color, string itemInnerType, string size) :
-                    base(name, price, color, size) => ItemInnerType = itemInnerType;
-        public override Item CreateItem() => new Net(Name, Price, "", ItemInnerType, "");
+        public override Stock CreateItem(string name, double price, string color, string itemInnerType, string size) =>
+            new Net()
+            {
+                Name = name,
+                Price = price,
+                Color = color,
+                ItemType = ItemTypes.Ball.ToString(),
+                ItemInnerType = itemInnerType,
+                Size = string.Empty,
+                LastAdded = DateTime.Now,
+                Created = DateTime.Now,
+                Quantity = 0
+            };
     }
 }

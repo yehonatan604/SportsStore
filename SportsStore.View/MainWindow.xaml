@@ -36,10 +36,11 @@
                             </Image.OpacityMask>
                         </Image>
                     </MenuItem.Icon>
-                    <MenuItem Header="_Logoff" Width="245"/>
-                    <MenuItem Header="_About" Width="245"/>
+                    <MenuItem x:Name="Logoff" Header="_Logoff" Width="245" Click="Logoff_Click"/>
+                    <MenuItem x:Name="Settings" Header="_Settings" Width="245" Click="Settings_Click"/>
+                    <MenuItem x:Name="About" Header="_About" Width="245" Click="About_Click"/>
                     <Separator/>
-                    <MenuItem Header="_Exit" Width="245"/>
+                    <MenuItem x:Name="Exit" Header="_Exit" Width="245" Click="Exit_Click"/>
                 </MenuItem>
             </Menu>
             <Label x:Name="LblTime" FontSize="14" FontWeight="SemiBold" Content="Label" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,15,0"/>
@@ -108,7 +109,7 @@
                     </Border>
                 </Grid>
             </TabItem>
-            
+
             <TabItem x:Name="Customers_Tab" MouseLeftButtonUp="Customers_Tab_MouseLeftButtonUp">
                 <TabItem.Header>
                     <WrapPanel Width="240">
@@ -211,7 +212,7 @@
                     </Border>
                 </Grid>
             </TabItem>
-            
+
             <TabItem x:Name="EditStock_Tab" MouseLeftButtonUp="EditStock_Tab_MouseLeftButtonUp">
                 <TabItem.Header>
                     <WrapPanel Width="240">
@@ -258,7 +259,7 @@
                     </Border>
                 </Grid>
             </TabItem>
-            
+
             <TabItem x:Name="Users_Tab" MouseLeftButtonUp="Users_Tab_MouseLeftButtonUp">
                 <TabItem.Header>
                     <WrapPanel Width="240">
@@ -347,27 +348,8 @@
                     </Border>
                 </Grid>
             </TabItem>
-
-            <TabItem x:Name="Messages_Tab" MouseLeftButtonUp="Logs_Tab_MouseLeftButtonUp">
-                <TabItem.Header>
-                    <WrapPanel Width="240">
-                        <Image Source="D:\CSharpProjects\SportsStore\SportsStore.View\Images\messagesTab-icon.png" Margin="0,-3,25,0" Height="38" Width="44"/>
-                        <TextBlock Text="Messages" FontSize="30" Style="{StaticResource TabsTblockStyle}" MouseEnter="TabHdrStock_MouseEnter" MouseLeave="TabHdrStock_MouseLeave"/>
-                    </WrapPanel>
-                </TabItem.Header>
-
-            </TabItem>
-
-            <TabItem x:Name="Preferences_Tab" MouseLeftButtonUp="Logs_Tab_MouseLeftButtonUp">
-                <TabItem.Header>
-                    <WrapPanel Width="240">
-                        <Image Source="D:\CSharpProjects\SportsStore\SportsStore.View\Images\SettingsTab-icon.png" Margin="0,-3,25,0" Height="38" Width="44"/>
-                        <TextBlock Text="Settings" FontSize="30" Style="{StaticResource TabsTblockStyle}" MouseEnter="TabHdrStock_MouseEnter" MouseLeave="TabHdrStock_MouseLeave"/>
-                    </WrapPanel>
-                </TabItem.Header>
-            </TabItem>
         </TabControl>
-        
+
     </Grid>
 
 </Window>

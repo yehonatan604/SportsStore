@@ -62,50 +62,7 @@ namespace SportsStore.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("customers");
-                });
-
-            modelBuilder.Entity("SportsStore.Model.Items.Item", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ItemInnerType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ItemType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Size")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Items");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Item");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("SportsStore.Model.Items.Sale", b =>
@@ -119,14 +76,14 @@ namespace SportsStore.Model.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("SaleDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("StockId")
+                        .HasColumnType("int");
 
                     b.Property<double>("TotalPrice")
                         .HasColumnType("float");
@@ -138,7 +95,7 @@ namespace SportsStore.Model.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("StockId");
 
                     b.HasIndex("UserId");
 
@@ -153,9 +110,23 @@ namespace SportsStore.Model.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("CustomerFname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerLname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ItemColor")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ItemInnerType")
                         .IsRequired()
@@ -193,9 +164,6 @@ namespace SportsStore.Model.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ThisItemId")
-                        .HasColumnType("int");
-
                     b.Property<double>("TotalPrice")
                         .HasColumnType("float");
 
@@ -212,28 +180,13 @@ namespace SportsStore.Model.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("ItemColor")
-                        .IsRequired()
+                    b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ItemCreated")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ItemInnerType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ItemName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("ItemPrice")
-                        .HasColumnType("float");
-
-                    b.Property<string>("ItemSize")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -244,15 +197,20 @@ namespace SportsStore.Model.Migrations
                     b.Property<DateTime>("LastAdded")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("ThisItemId")
-                        .HasColumnType("int");
+                    b.Property<string>("Size")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
 
                     b.ToTable("Stocks");
                 });
@@ -306,7 +264,7 @@ namespace SportsStore.Model.Migrations
                     b.ToTable("LoggedIns");
                 });
 
-            modelBuilder.Entity("SportsStore.Model.Users.Message", b =>
+            modelBuilder.Entity("SportsStore.Model.Users.LogsView", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -314,71 +272,38 @@ namespace SportsStore.Model.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Content")
+                    b.Property<string>("ActionType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("RecipentFName")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RecipentId")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RecipentLName")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SenderFname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SenderLname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("SportsStore.Model.Users.MessageBox", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("LogId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("MessageCount")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MessageBoxes");
+                    b.ToTable("logsView");
                 });
 
             modelBuilder.Entity("SportsStore.Model.Users.User", b =>
@@ -428,32 +353,44 @@ namespace SportsStore.Model.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SportsStore.Model.Items.Ball", b =>
+            modelBuilder.Entity("SportsStore.Model.Users.UsersView", b =>
                 {
-                    b.HasBaseType("SportsStore.Model.Items.Item");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasDiscriminator().HasValue("Ball");
-                });
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-            modelBuilder.Entity("SportsStore.Model.Items.Bat", b =>
-                {
-                    b.HasBaseType("SportsStore.Model.Items.Item");
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("Bat");
-                });
+                    b.Property<DateTime>("HireDate")
+                        .HasColumnType("datetime2");
 
-            modelBuilder.Entity("SportsStore.Model.Items.Clothe", b =>
-                {
-                    b.HasBaseType("SportsStore.Model.Items.Item");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("Clothe");
-                });
+                    b.Property<DateTime?>("LastSale")
+                        .HasColumnType("datetime2");
 
-            modelBuilder.Entity("SportsStore.Model.Items.Net", b =>
-                {
-                    b.HasBaseType("SportsStore.Model.Items.Item");
+                    b.Property<int?>("SalesCount")
+                        .HasColumnType("int");
 
-                    b.HasDiscriminator().HasValue("Net");
+                    b.Property<double?>("SalesTotal")
+                        .HasColumnType("float");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("usersView");
                 });
 
             modelBuilder.Entity("SportsStore.Model.Items.Sale", b =>
@@ -464,9 +401,9 @@ namespace SportsStore.Model.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SportsStore.Model.Items.Item", "Item")
+                    b.HasOne("SportsStore.Model.Items.Stock", "Stock")
                         .WithMany()
-                        .HasForeignKey("ItemId")
+                        .HasForeignKey("StockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -478,20 +415,9 @@ namespace SportsStore.Model.Migrations
 
                     b.Navigation("Customer");
 
-                    b.Navigation("Item");
+                    b.Navigation("Stock");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SportsStore.Model.Items.Stock", b =>
-                {
-                    b.HasOne("SportsStore.Model.Items.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("SportsStore.Model.Users.Log", b =>
@@ -506,17 +432,6 @@ namespace SportsStore.Model.Migrations
                 });
 
             modelBuilder.Entity("SportsStore.Model.Users.Logged", b =>
-                {
-                    b.HasOne("SportsStore.Model.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SportsStore.Model.Users.MessageBox", b =>
                 {
                     b.HasOne("SportsStore.Model.Users.User", "User")
                         .WithMany()

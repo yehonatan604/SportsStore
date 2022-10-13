@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace SportsStore.Model.Items
 {
-    public class Clothe : Item
+    public class Clothe : Stock
     {
-        public Clothe(string name, double price, string color, string itemInnerType, string size) : base(name, price, color,itemInnerType, size)
+        public Clothe() : base()
         {
             ItemType = ItemTypes.Clothe.ToString();
         }
-
     }
 }

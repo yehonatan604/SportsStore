@@ -50,7 +50,6 @@ namespace SportsStore.Utilities
         }
         public static bool IsEmailValid(TextBox textBox)
         {
-            Read reader = new();
             Regex regex = new(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
             Match match = regex.Match(textBox.Text);
             if (!match.Success)
@@ -59,7 +58,7 @@ namespace SportsStore.Utilities
                 textBox.BorderBrush = new SolidColorBrush(Colors.IndianRed);
                 return false;
             }
-            else if (!reader.CheckAvailability(textBox.Text))
+            else if (!new UserEntityHandler().CheckAvailability(textBox.Text))
             {
                 MessageBox.Show("Email is already taken!");
                 textBox.BorderBrush = new SolidColorBrush(Colors.IndianRed);

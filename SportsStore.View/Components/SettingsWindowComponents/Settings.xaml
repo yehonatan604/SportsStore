@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="SportsStore.View.Components.SettingsWindowComponents.Settings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SportsStore.View.Components.SettingsWindowComponents"
+             mc:Ignorable="d" 
+             Height="290" Width="395">
+    <Grid Height="290" Width="300" VerticalAlignment="Top" HorizontalAlignment="Center">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <WrapPanel Orientation="Vertical" Grid.Row="0" Grid.RowSpan="2" Margin="0,15,0,0" HorizontalAlignment="Center">
+            <TextBlock Text="First Name:" Style="{StaticResource TblockComponenta}"/>
+            <TextBlock Text="Last Name:" Style="{StaticResource TblockComponenta}"/>
+            <TextBlock Text="Email:" Style="{StaticResource TblockComponenta}"/>
+            <TextBlock Text="Password:"  Style="{StaticResource TblockComponenta}" />
+            
+        </WrapPanel>
+        <WrapPanel x:Name="AddItemTextBoxes" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <TextBox x:Name="BoxItemId" Width="100" Style="{StaticResource TboxComponenta2}" Margin="5,0,0,0"/>
+            <TextBox x:Name="BoxItemName" Width="100" Style="{StaticResource TboxComponenta2}" Margin="5,5,0,0"/>
+            <TextBox x:Name="BoxItemPrice" Width="100" Style="{StaticResource TboxComponenta2}" Margin="5,5,0,0" />
+            <TextBox x:Name="BoxQuantity" Width="100" Style="{StaticResource TboxComponenta2}" Margin="5,5,0,0"/>
+        </WrapPanel>
+        <WrapPanel Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top" HorizontalAlignment="Center" >
+            <Button x:Name="BtnEditItem" Content="Change" Margin="0,20,0,0"/>
+        </WrapPanel>
+        <WrapPanel Orientation="Vertical" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,55,0,0" HorizontalAlignment="Center">
+            <TextBlock Text="Generate Databse" Style="{StaticResource TblockComponenta}" MouseEnter="TextBlock_MouseEnter" MouseLeave="TextBlock_MouseLeave" MouseDown="TextBlock_MouseDown" />
+        </WrapPanel>
+    </Grid>
+
+</UserControl>

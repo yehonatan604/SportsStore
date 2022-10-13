@@ -12,7 +12,6 @@ namespace SportsStore.Utilities
 {
     public static class CmboBoxFiller
     {
-        private static readonly Read reader = new();
         public static void OnStart()
         {
             Fill(new ItemTypes(), StockViews.Current.CmbBoxViewByItemType);
@@ -62,41 +61,44 @@ namespace SportsStore.Utilities
 
         public static void FillSalesBoxes()
         {
-            foreach (string str in reader.GetList("ByItem"))
+            SaleEntityHandler handler = new();
+            foreach (string str in handler.GetList("ByItem"))
             {
                 SaleViews.Current.CmbBoxByItemType.Items.Add(str);
             }
-            foreach (string str in reader.GetList("BySalesMan"))
+            foreach (string str in handler.GetList("BySalesMan"))
             {
                 SaleViews.Current.CmbBoxBySalesman.Items.Add(str);
             }
-            foreach (string str in reader.GetList("ByDate"))
+            foreach (string str in handler.GetList("ByDate"))
             {
                 SaleViews.Current.CmbBoxByDate.Items.Add(str);
             }
         }
         public static void FillUserBoxes()
         {
+            UserEntityHandler handler = new();
             Fill(new UserTypes(), UsersView.Current.BoxByUserType);
 
-            foreach (string date in reader.GetList("ByDate"))
+            foreach (string date in handler.GetList("ByDate"))
             {
                 UsersView.Current.BoxBySaleDate.Items.Add(date);
             }
-            foreach (string date in reader.GetList("ByHireDate"))
+            foreach (string date in handler.GetList("ByHireDate"))
             {
                 UsersView.Current.BoxByHireYear.Items.Add(date);
             }
         }
         public static void FillLogsBoxes()
         {
+            LogEntityHandler handler = new();
             Fill(new UserTypes(), LogsView.Current.BoxByUserType);
 
-            foreach (string str in reader.GetList("ByLogAction"))
+            foreach (string str in handler.GetList("ByLogAction"))
             {
                 LogsView.Current.BoxByActionType.Items.Add(str);
             }
-            foreach (string str in reader.GetList("ByLogDate"))
+            foreach (string str in handler.GetList("ByLogDate"))
             {
                 LogsView.Current.BoxByActionDate.Items.Add(str);
             }

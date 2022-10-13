@@ -15,6 +15,7 @@
                 <ResourceDictionary Source="\Themes\ResourceDictionaries\TextBlockStyles.xaml" />
                 <ResourceDictionary Source="\Themes\ResourceDictionaries\BorderStyles.xaml" />
                 <ResourceDictionary Source="\Themes\ResourceDictionaries\MenuStyles.xaml" />
+                <ResourceDictionary Source="\Themes\ResourceDictionaries\PasswordStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -33,4 +33,17 @@ namespace SportsStore.Model.Users
             RememberMe = false;
         }
     }
+
+    public class UsersView
+    {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime HireDate { get; set; }
+        public string UserType { get; set; }
+        public DateTime? LastSale { get; set; }
+        public double? SalesTotal { get; set; }
+        public int? SalesCount { get; set; }
+    }
 }

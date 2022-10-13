@@ -2,11 +2,10 @@
 
 namespace SportsStore.Model.Items
 {
-    public class Bat : Item
+    public class Bat : Stock
     {
 
-        public Bat(string name, double price, string color, string itemInnerType, string size) :
-                    base(name, price, color, itemInnerType, size)
+        public Bat() : base()
         {
             ItemType = ItemTypes.Bat.ToString();
         }

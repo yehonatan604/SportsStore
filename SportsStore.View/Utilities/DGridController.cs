@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using SportsStore.View;
 using System.Windows.Input;
+using SportsStore.Controller;
+using Microsoft.Extensions.Logging;
+using SportsStore.Enums;
 
 namespace SportsStore.Utilities
 {
@@ -34,24 +37,24 @@ namespace SportsStore.Utilities
         {
             if (dGrid == null)
             {
-                Dgrids[0].ItemsSource = MainWindow.Current.read.GetTable().ToList();
-                Dgrids[1].ItemsSource = MainWindow.Current.read.GetTable().ToList();
+                Dgrids[0].ItemsSource = new StockEntityHandler().GetTable("Stock").ToList();
+                Dgrids[1].ItemsSource = new StockEntityHandler().GetTable("Stock").ToList();
             }
             if (dGrid == Dgrids[2])
             {
-                Dgrids[2].ItemsSource = MainWindow.Current.read.GetTable("Sales").ToList();
+                Dgrids[2].ItemsSource = new SaleEntityHandler().GetTable("Sales").ToList();
             }
             if (dGrid == Dgrids[3])
             {
-                Dgrids[3].ItemsSource = MainWindow.Current.read.GetTable("Customers").ToList();
+                Dgrids[3].ItemsSource = new CustomerEntityHandler().GetTable("Customers").ToList();
             }
             if (dGrid == Dgrids[4])
             {
-                Dgrids[4].ItemsSource = MainWindow.Current.read.GetTable("Users").ToList();
+                Dgrids[4].ItemsSource = new UserEntityHandler().GetTable("Users").ToList();
             }
             if (dGrid == Dgrids[5])
             {
-                Dgrids[5].ItemsSource = MainWindow.Current.read.GetTable("Logs").ToList();
+                Dgrids[5].ItemsSource = new LogEntityHandler().GetTable("Logs").ToList();
             }
         }
         public static string GetDgridContent(DataGrid dGrid, int cell = 0)
