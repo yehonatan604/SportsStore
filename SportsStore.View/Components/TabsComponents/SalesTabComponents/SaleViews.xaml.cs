@@ -111,5 +111,20 @@ namespace SportsStore.View.Themes.CustomControls.SalesTabComponents
                 }
             }
         }
+
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            BoxById.Text = string.Empty;
+            CmbBoxByItemType.Text = string.Empty;
+            CmbBoxByInnerType.Text = string.Empty;
+            CmbBoxByColor.Text = string.Empty;
+            CmbBoxBySize.Text = string.Empty;
+            CmbBoxBySalesman.Text = string.Empty;
+            CmbBoxByDate.Text = string.Empty;
+            TboxMin.Text = string.Empty;
+            TboxMax.Text = string.Empty;
+
+            DGridController.RefreshDgrid(MainWindow.Current.Dgrid2);
+        }
     }
 }

@@ -82,7 +82,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                     <Button x:Name="BtnSearch" Content="Go" Width="65"  Grid.Column="0" Margin="0,10,0,0" HorizontalAlignment="Center" Click="BtnSearch_Click" />
-                    <Button x:Name="BtnRefresh" Content="Refresh" Width="65"  Grid.Column="1" Margin="0,10,0,0" HorizontalAlignment="Left"/>
+                <Button x:Name="BtnRefresh" Content="Refresh" Width="65"  Grid.Column="1" Margin="0,10,0,0" HorizontalAlignment="Left" Click="BtnRefresh_Click"/>
             </Grid>
 
         </WrapPanel>

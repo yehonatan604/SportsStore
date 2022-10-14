@@ -63,6 +63,7 @@ namespace SportsStore.Controller
             for (int i = 0; i < rnd.Next(1, 100); i++)
             {
                 User user = users[rnd.Next(2, users.Count)];
+                UsersView userView = Db.usersView.Single(x => x.Id == user.Id);
                 Customer customer = customers[rnd.Next(0, customers.Count)];
                 DateTime saleDate = RandomDate(customer.AddedAt, end);
 
@@ -91,13 +92,17 @@ namespace SportsStore.Controller
                                  where sales.Customer.Id == customer.Id
                                  select sales.SaleDate).Last();
 
-                    customer.PurchasesCount = customer.PurchasesCount is null || customer.PurchasesCount == 0 ? 1 : customer.PurchasesCount += 1;
-                    customer.TotalPurchases = customer.TotalPurchases is null || customer.TotalPurchases == 0 ? totalPrice : customer.TotalPurchases += totalPrice;
+                    customer.PurchasesCount = customer.PurchasesCount == null || customer.PurchasesCount == 0 ? 1 : customer.PurchasesCount += 1;
+                    customer.TotalPurchases = customer.TotalPurchases == null || customer.TotalPurchases == 0 ? totalPrice : customer.TotalPurchases += totalPrice;
                     customer.LastPurchase = query;
 
-                    user.SalesCount = user.SalesCount is null || user.SalesCount == 0 ? 1 : user.SalesCount += 1;
-                    user.SalesTotal = user.SalesTotal is null || user.SalesTotal == 0 ? totalPrice : user.SalesTotal += totalPrice;
+                    user.SalesCount = user.SalesCount == null || user.SalesCount == 0 ? 1 : user.SalesCount += 1;
+                    user.SalesTotal = user.SalesTotal == null || user.SalesTotal == 0 ? totalPrice : user.SalesTotal += totalPrice;
                     user.LastSale = query;
+
+                    userView.SalesCount = userView.SalesCount == null || userView.SalesCount == 0 ? 1 : userView.SalesCount += 1;
+                    userView.SalesTotal = userView.SalesTotal == null || userView.SalesTotal == 0 ? totalPrice : userView.SalesTotal += totalPrice;
+                    userView.LastSale = query;
 
                     Db.Sales.AddGenerateRecordsLog(Db, Logger);
                     Db.SaveChanges();
