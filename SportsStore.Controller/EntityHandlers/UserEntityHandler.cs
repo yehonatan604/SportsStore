@@ -43,7 +43,6 @@ namespace SportsStore.Controller
                 new ("Jerry", "Tom", UserTypes.SalesMan, "Joee@email.com", 1234.ToString() )
             };
             users.ForEach(user => Add(new string[] { user.FirstName, user.LastName, user.UserType.ToString(), user.Email, user.Password }));
-            users.ForEach(user => Db.usersView.CreateView(Db, user));
             
             Db.Users.AddGenerateRecordsLog(Db, Logger);
             Db.SaveChanges();

@@ -16,7 +16,7 @@ namespace SportsStore.Controller.CRUD
                 Name = name,
                 Price = price,
                 Color = color,
-                ItemType = ItemTypes.Ball.ToString(),
+                ItemType = ItemTypes.Bat.ToString(),
                 ItemInnerType = itemInnerType,
                 Size = string.Empty,
                 LastAdded = DateTime.Now,
