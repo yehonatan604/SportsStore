@@ -37,6 +37,19 @@ namespace SportsStore.View
             DGridController.OnStart(new List<DataGrid>() { Dgrid1, Dgrid1_1, Dgrid2, Dgrid3, Dgrid4, Dgrid5 });
             CmboBoxFiller.OnStart();
             Clock.Start(LblTime);
+
+            if (new UserEntityHandler().CheckAuthorizationLevel() > 1)
+            {
+                EditStock_Tab.IsEnabled = false;
+                Users_Tab.IsEnabled = false;
+                Sales_Tab.IsEnabled = false;
+                Logs_Tab.IsEnabled = false;
+            }
+            else if (new UserEntityHandler().CheckAuthorizationLevel() == 1)
+            {
+                Users_Tab.IsEnabled = false;
+                Logs_Tab.IsEnabled = false;
+            }
         }
 
         // Stock_Tab Event Handlers
