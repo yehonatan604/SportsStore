@@ -13,16 +13,16 @@ namespace SportsStore.Controller.CRUD
     {
         public override Stock CreateItem(string name, double price, string color, string itemInnerType, string size) =>
             new Clothe()
-        {
-            Name = name,
-            Price = price,
-            Color = color,
-            ItemType = ItemTypes.Clothe.ToString(),
-            ItemInnerType = itemInnerType,
-            Size = size,
-            LastAdded = DateTime.Now,
-            Created = DateTime.Now,
-            Quantity = 0
-        };
+            {
+                Name = name,
+                Price = price,
+                Color = color,
+                ItemType = ItemTypes.Clothe.ToString(),
+                ItemInnerType = itemInnerType,
+                Size = size,
+                LastAdded = DateTime.Now,
+                Created = DateTime.Now,
+                Quantity = 0
+            };
     }
 }

@@ -18,7 +18,5 @@ namespace SportsStore.Controller.CRUD
         public virtual double Price { get; set; }
 
         public abstract Stock CreateItem(string name, double price, string color, string itemInnerType, string size);
-
-        
     }
 }
