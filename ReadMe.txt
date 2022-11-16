@@ -86,3 +86,20 @@ The software's main view is divided into 6 sections:
 *Main UI is divided into different components for better handling.
 *All the UI Components & Design was made from scratch, using Resource Dictionaries & Custom Controls. 
 *Passwords are encoded to MD5 Hash.
+
+///////////Installation:
+
+1. download & install Microsoft SQL Server - https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-2017
+2. download & intall Microsoft Visual Studio - https://visualstudio.microsoft.com/
+3. clone this project from github - https://github.com/yehonatan604/SportsStore
+4. if not installed in project, install NuGet packages - 
+	1. Microsoft.EntityFrameworkCore.SqlServer
+	2. Microsoft.EntityFrameworkCore.Design
+5. at the app folder, as an admin, open powershell & type this commands:
+	1. dotnet ef migrations add migartion1
+	2. dotnet dotnet ef databse update
+6. make sure that SportsStore.View is the startip project.
+7. you can login with that details: 
+   email - Admin, 
+   password - Admin1234
+8. it is strongly recomended that you will change those details in the settings window!
